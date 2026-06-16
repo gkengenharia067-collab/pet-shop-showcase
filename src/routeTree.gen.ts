@@ -12,6 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProdutosRouteImport } from './routes/produtos'
 import { Route as PedidosRouteImport } from './routes/pedidos'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CatalogoIndexRouteImport } from './routes/catalogo.index'
+import { Route as ProdutorFazendaBoaTerraRouteImport } from './routes/produtor.fazenda-boa-terra'
+import { Route as CatalogoIdRouteImport } from './routes/catalogo.$id'
 
 const ProdutosRoute = ProdutosRouteImport.update({
   id: '/produtos',
@@ -28,35 +31,81 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CatalogoIndexRoute = CatalogoIndexRouteImport.update({
+  id: '/catalogo/',
+  path: '/catalogo/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProdutorFazendaBoaTerraRoute = ProdutorFazendaBoaTerraRouteImport.update({
+  id: '/produtor/fazenda-boa-terra',
+  path: '/produtor/fazenda-boa-terra',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CatalogoIdRoute = CatalogoIdRouteImport.update({
+  id: '/catalogo/$id',
+  path: '/catalogo/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/pedidos': typeof PedidosRoute
   '/produtos': typeof ProdutosRoute
+  '/catalogo/$id': typeof CatalogoIdRoute
+  '/produtor/fazenda-boa-terra': typeof ProdutorFazendaBoaTerraRoute
+  '/catalogo/': typeof CatalogoIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/pedidos': typeof PedidosRoute
   '/produtos': typeof ProdutosRoute
+  '/catalogo/$id': typeof CatalogoIdRoute
+  '/produtor/fazenda-boa-terra': typeof ProdutorFazendaBoaTerraRoute
+  '/catalogo': typeof CatalogoIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/pedidos': typeof PedidosRoute
   '/produtos': typeof ProdutosRoute
+  '/catalogo/$id': typeof CatalogoIdRoute
+  '/produtor/fazenda-boa-terra': typeof ProdutorFazendaBoaTerraRoute
+  '/catalogo/': typeof CatalogoIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/pedidos' | '/produtos'
+  fullPaths:
+    | '/'
+    | '/pedidos'
+    | '/produtos'
+    | '/catalogo/$id'
+    | '/produtor/fazenda-boa-terra'
+    | '/catalogo/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/pedidos' | '/produtos'
-  id: '__root__' | '/' | '/pedidos' | '/produtos'
+  to:
+    | '/'
+    | '/pedidos'
+    | '/produtos'
+    | '/catalogo/$id'
+    | '/produtor/fazenda-boa-terra'
+    | '/catalogo'
+  id:
+    | '__root__'
+    | '/'
+    | '/pedidos'
+    | '/produtos'
+    | '/catalogo/$id'
+    | '/produtor/fazenda-boa-terra'
+    | '/catalogo/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PedidosRoute: typeof PedidosRoute
   ProdutosRoute: typeof ProdutosRoute
+  CatalogoIdRoute: typeof CatalogoIdRoute
+  ProdutorFazendaBoaTerraRoute: typeof ProdutorFazendaBoaTerraRoute
+  CatalogoIndexRoute: typeof CatalogoIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -82,6 +131,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/catalogo/': {
+      id: '/catalogo/'
+      path: '/catalogo'
+      fullPath: '/catalogo/'
+      preLoaderRoute: typeof CatalogoIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/produtor/fazenda-boa-terra': {
+      id: '/produtor/fazenda-boa-terra'
+      path: '/produtor/fazenda-boa-terra'
+      fullPath: '/produtor/fazenda-boa-terra'
+      preLoaderRoute: typeof ProdutorFazendaBoaTerraRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/catalogo/$id': {
+      id: '/catalogo/$id'
+      path: '/catalogo/$id'
+      fullPath: '/catalogo/$id'
+      preLoaderRoute: typeof CatalogoIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,7 +159,20 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PedidosRoute: PedidosRoute,
   ProdutosRoute: ProdutosRoute,
+  CatalogoIdRoute: CatalogoIdRoute,
+  ProdutorFazendaBoaTerraRoute: ProdutorFazendaBoaTerraRoute,
+  CatalogoIndexRoute: CatalogoIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

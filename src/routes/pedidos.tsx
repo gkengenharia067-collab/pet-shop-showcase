@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Check } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
-import { useStore } from "@/lib/store";
+import { useStore, type StatusPedido } from "@/lib/store";
 
 export const Route = createFileRoute("/pedidos")({
   head: () => ({
@@ -18,7 +17,7 @@ function formatBRL(n: number) {
 }
 
 function PedidosPage() {
-  const { pedidos, marcarEntregue } = useStore();
+  const { pedidos, alterarStatusPedido } = useStore();
   const pendentes = pedidos.filter((p) => p.status === "Pendente").length;
   const entregues = pedidos.length - pendentes;
 
@@ -47,22 +46,25 @@ function PedidosPage() {
           <tbody>
             {pedidos.map((p, i) => (
               <tr key={p.id} className={i !== 0 ? "border-t border-border" : ""}>
-                <td className="px-5 py-4 font-medium">{p.cliente}</td>
+                <td className="px-5 py-4 font-medium">
+                  <div>{p.cliente}</div>
+                  {p.whatsapp && <div className="text-xs text-muted-foreground mt-0.5">WhatsApp: {p.whatsapp}</div>}
+                  {p.observacao && <div className="text-xs text-muted-foreground mt-0.5 italic">"{p.observacao}"</div>}
+                </td>
                 <td className="px-5 py-4">{p.produto}</td>
                 <td className="px-5 py-4">{p.quantidade}</td>
                 <td className="px-5 py-4 font-semibold">{formatBRL(p.valor)}</td>
                 <td className="px-5 py-4"><StatusBadge status={p.status} /></td>
                 <td className="px-5 py-4 text-right">
-                  {p.status === "Pendente" ? (
-                    <button
-                      onClick={() => marcarEntregue(p.id)}
-                      className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
-                    >
-                      <Check className="size-4" /> Marcar como Entregue
-                    </button>
-                  ) : (
-                    <span className="text-sm text-muted-foreground">—</span>
-                  )}
+                  <select
+                    value={p.status}
+                    onChange={(e) => alterarStatusPedido(p.id, e.target.value as StatusPedido)}
+                    className="border border-border rounded-lg bg-background text-sm px-2 py-1.5 focus:ring-1 focus:ring-primary outline-none"
+                  >
+                    <option value="Pendente">Mover para Pendente</option>
+                    <option value="Em preparação">Em preparação</option>
+                    <option value="Entregue">Entregue</option>
+                  </select>
                 </td>
               </tr>
             ))}
@@ -81,19 +83,26 @@ function PedidosPage() {
               </div>
               <StatusBadge status={p.status} />
             </div>
-            <div className="mt-3 text-sm">
+            {p.whatsapp && <div className="text-sm text-muted-foreground mt-1">WhatsApp: {p.whatsapp}</div>}
+            {p.observacao && <div className="text-sm text-muted-foreground mt-1 italic">"{p.observacao}"</div>}
+            
+            <div className="mt-3 text-sm border-t border-border pt-3">
               <div><span className="text-muted-foreground">Produto:</span> {p.produto}</div>
               <div><span className="text-muted-foreground">Qtd:</span> {p.quantidade}</div>
               <div className="mt-1 text-lg font-semibold text-primary">{formatBRL(p.valor)}</div>
             </div>
-            {p.status === "Pendente" && (
-              <button
-                onClick={() => marcarEntregue(p.id)}
-                className="mt-3 w-full inline-flex items-center justify-center gap-2 px-3 py-3 rounded-lg bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-colors"
+            
+            <div className="mt-4">
+              <select
+                value={p.status}
+                onChange={(e) => alterarStatusPedido(p.id, e.target.value as StatusPedido)}
+                className="w-full border border-border rounded-lg bg-background text-sm px-3 py-2.5 focus:ring-1 focus:ring-primary outline-none"
               >
-                <Check className="size-4" /> Marcar como Entregue
-              </button>
-            )}
+                <option value="Pendente">Marcar como Pendente</option>
+                <option value="Em preparação">Marcar como Em preparação</option>
+                <option value="Entregue">Marcar como Entregue</option>
+              </select>
+            </div>
           </div>
         ))}
       </div>
@@ -101,13 +110,15 @@ function PedidosPage() {
   );
 }
 
-function StatusBadge({ status }: { status: "Pendente" | "Entregue" }) {
+function StatusBadge({ status }: { status: StatusPedido }) {
   const cls =
     status === "Entregue"
-      ? "bg-success/15 text-success border-success/30"
-      : "bg-warning/20 text-warning-foreground border-warning/40";
+      ? "bg-green-100 text-green-800 border-green-200"
+      : status === "Em preparação"
+      ? "bg-blue-100 text-blue-800 border-blue-200"
+      : "bg-yellow-100 text-yellow-800 border-yellow-200";
   return (
-    <span className={"inline-block text-xs font-medium px-2.5 py-1 rounded-full border " + cls}>
+    <span className={"inline-block text-xs font-semibold px-2.5 py-1 rounded-full border " + cls}>
       {status}
     </span>
   );
