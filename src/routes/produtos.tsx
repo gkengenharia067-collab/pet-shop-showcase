@@ -215,23 +215,20 @@ function ProdutosPage() {
                   </select>
                 </Field>
               </div>
-              <Field label="Ícone">
-                <div className="flex flex-wrap gap-2">
-                  {["🍅","🍯","🥚","🥬","🥕","🍓","🌽","🥛","🐓","🌱"].map((e) => (
-                    <button
-                      key={e}
-                      type="button"
-                      onClick={() => setForm({ ...form, emoji: e })}
-                      className={
-                        "size-10 rounded-lg text-2xl flex items-center justify-center border transition-colors " +
-                        (form.emoji === e
-                          ? "border-primary bg-primary/10"
-                          : "border-border hover:bg-muted")
-                      }
-                    >
-                      {e}
-                    </button>
-                  ))}
+              <Field label="URL da Imagem">
+                <input
+                  type="url"
+                  value={form.imagem}
+                  onChange={(e) => setForm({ ...form, imagem: e.target.value })}
+                  className="input"
+                  placeholder="https://exemplo.com/foto.jpg"
+                />
+                <div className="mt-3 w-24 h-24 rounded-lg bg-accent/40 flex items-center justify-center overflow-hidden border border-border">
+                  {form.imagem ? (
+                    <img src={form.imagem} alt="Pré-visualização" className="w-full h-full object-cover" />
+                  ) : (
+                    <Camera className="size-8 text-muted-foreground" aria-hidden />
+                  )}
                 </div>
               </Field>
 
