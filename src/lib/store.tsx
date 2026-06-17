@@ -25,9 +25,9 @@ export type Pedido = {
 };
 
 const produtosIniciais: Produto[] = [
-  { id: "p1", nome: "Tomate orgânico", preco: 8, estoque: 45, unidade: "kg", categoria: "Hortaliças", imagem: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400&h=400&fit=crop" },
-  { id: "p2", nome: "Mel artesanal", preco: 35, estoque: 12, unidade: "pote 500g", categoria: "Apicultura", imagem: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=400&h=400&fit=crop" },
-  { id: "p3", nome: "Ovos caipiras", preco: 22, estoque: 30, unidade: "dúzia", categoria: "Aves", imagem: "https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?w=400&h=400&fit=crop" },
+  { id: "p1", nome: "Tomate orgânico", preco: 8, estoque: 45, unidade: "kg", categoria: "Hortaliças", imagem: "https://images.unsplash.com/photo-1623375477547-c73c4f274922?q=80&w=1219&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+  { id: "p2", nome: "Mel artesanal", preco: 35, estoque: 12, unidade: "pote 500g", categoria: "Apicultura", imagem: "https://images.unsplash.com/photo-1587049352851-8d4e89133924?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+  { id: "p3", nome: "Ovos caipiras", preco: 22, estoque: 30, unidade: "dúzia", categoria: "Aves", imagem: "https://images.unsplash.com/photo-1477506410535-f12fe9af97cc?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
 ];
 
 const pedidosIniciais: Pedido[] = [
@@ -52,7 +52,7 @@ const StoreContext = createContext<Ctx | null>(null);
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [produtos, setProdutos] = useState<Produto[]>(() => {
     try {
-      const saved = localStorage.getItem("@mr/produtos");
+      const saved = localStorage.getItem("@mr/produtos.v2");
       return saved ? JSON.parse(saved) : produtosIniciais;
     } catch {
       return produtosIniciais;
@@ -78,7 +78,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   });
 
   useEffect(() => {
-    localStorage.setItem("@mr/produtos", JSON.stringify(produtos));
+    localStorage.setItem("@mr/produtos.v2", JSON.stringify(produtos));
   }, [produtos]);
   
   useEffect(() => {
@@ -93,7 +93,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       if (e.key === "@mr/pedidos" && e.newValue) {
         setPedidos(JSON.parse(e.newValue));
       }
-      if (e.key === "@mr/produtos" && e.newValue) {
+      if (e.key === "@mr/produtos.v2" && e.newValue) {
         setProdutos(JSON.parse(e.newValue));
       }
       if (e.key === "@mr/vendas" && e.newValue) {

@@ -36,6 +36,19 @@ const emptyForm: FormState = {
   imagem: "",
 };
 
+const galeriaImagens: { nome: string; url: string }[] = [
+  { nome: "Tomate", url: "https://images.unsplash.com/photo-1623375477547-c73c4f274922?q=80&w=1219&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+  { nome: "Mel", url: "https://images.unsplash.com/photo-1587049352851-8d4e89133924?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+  { nome: "Ovos", url: "https://images.unsplash.com/photo-1477506410535-f12fe9af97cc?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+  { nome: "Alface", url: "https://images.unsplash.com/photo-1556781366-336f8353ba7c?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+  { nome: "Cenoura", url: "https://plus.unsplash.com/premium_photo-1661875719416-f2b30e95ea4a?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+  { nome: "Morango", url: "https://images.unsplash.com/photo-1716209290705-7333e99e3434?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+  { nome: "Milho", url: "https://plus.unsplash.com/premium_photo-1725619408724-d2f8eedf8128?q=80&w=1172&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+  { nome: "Leite", url: "https://images.unsplash.com/photo-1639151082235-406d8eb262b9?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+  { nome: "Frango", url: "https://images.unsplash.com/photo-1587593810167-a84920ea0781?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+  { nome: "Muda", url: "https://images.unsplash.com/photo-1649255717215-cbc24b661bbb?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+];
+
 function ProdutosPage() {
   const { produtos, addProduto, updateProduto, deleteProduto } = useStore();
   const [open, setOpen] = useState(false);
@@ -215,7 +228,29 @@ function ProdutosPage() {
                   </select>
                 </Field>
               </div>
-              <Field label="URL da Imagem">
+              <Field label="Galeria de imagens">
+                <div className="grid grid-cols-5 gap-2">
+                  {galeriaImagens.map((g) => {
+                    const selecionada = form.imagem === g.url;
+                    return (
+                      <button
+                        type="button"
+                        key={g.url}
+                        onClick={() => setForm({ ...form, imagem: g.url })}
+                        title={g.nome}
+                        className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${
+                          selecionada
+                            ? "border-primary ring-2 ring-primary/30"
+                            : "border-border hover:border-primary/60"
+                        }`}
+                      >
+                        <img src={g.url} alt={g.nome} className="w-full h-full object-cover" />
+                      </button>
+                    );
+                  })}
+                </div>
+              </Field>
+              <Field label="URL da Imagem (opcional)">
                 <input
                   type="url"
                   value={form.imagem}
