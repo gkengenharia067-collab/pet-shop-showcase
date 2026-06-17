@@ -39,8 +39,8 @@ const pedidosIniciais: Pedido[] = [
 type Ctx = {
   produtos: Produto[];
   pedidos: Pedido[];
-  addProduto: (p: Omit<Produto, "id" | "emoji"> & { emoji?: string }) => void;
-  updateProduto: (id: string, p: Omit<Produto, "id" | "emoji"> & { emoji?: string }) => void;
+  addProduto: (p: Omit<Produto, "id" | "imagem"> & { imagem?: string }) => void;
+  updateProduto: (id: string, p: Omit<Produto, "id" | "imagem"> & { imagem?: string }) => void;
   deleteProduto: (id: string) => void;
   alterarStatusPedido: (id: string, status: StatusPedido) => void;
   addPedido: (pedido: Omit<Pedido, "id" | "data" | "status">) => void;
