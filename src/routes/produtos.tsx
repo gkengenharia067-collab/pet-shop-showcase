@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Plus, Pencil, Trash2, X } from "lucide-react";
+import { Plus, Pencil, Trash2, X, Camera } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { useStore, type Produto } from "@/lib/store";
 
