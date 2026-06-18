@@ -154,7 +154,7 @@ function ProdutosPage() {
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-foreground/50 px-4 py-6">
-          <div className="w-full max-w-lg bg-card rounded-2xl shadow-xl border border-border">
+          <div className="w-full max-w-lg bg-card rounded-2xl shadow-xl border border-border max-h-[calc(100dvh-3rem)] flex flex-col">
             <div className="flex items-center justify-between px-6 py-4 border-b border-border">
               <h2 className="text-xl font-semibold">
                 {editing ? "Editar produto" : "Adicionar produto"}
@@ -163,7 +163,7 @@ function ProdutosPage() {
                 <X className="size-5" />
               </button>
             </div>
-            <form onSubmit={save} className="p-6 space-y-4">
+            <form onSubmit={save} className="p-6 space-y-4 overflow-y-auto">
               <Field label="Nome do produto">
                 <input
                   required
