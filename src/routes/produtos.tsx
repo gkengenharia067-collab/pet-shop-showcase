@@ -279,7 +279,7 @@ function ProdutosPage() {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-3 rounded-xl bg-primary text-primary-foreground font-weight font-semibold hover:bg-primary/90"
+                  className="flex-1 px-4 py-3 rounded-xl bg-primary text-primary-foreground font-semibold hover:bg-primary/90"
                 >
                   {editing ? "Salvar alterações" : "Adicionar produto"}
                 </button>
