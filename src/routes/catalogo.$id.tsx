@@ -1,8 +1,9 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { ArrowLeft, Leaf, MapPin, ShieldCheck, Truck, ChevronRight, Info, X, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Leaf, MapPin, ShieldCheck, Truck, ChevronRight, Info, Plus, Minus, ShoppingBag, CheckCircle2 } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { useState } from "react";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
+import { CartDrawer } from "@/components/CartDrawer";
 
 export const Route = createFileRoute("/catalogo/$id")({
   component: ProdutoDetalhesPage,
@@ -27,7 +28,7 @@ function getFullDescription(nome: string, categoria: string) {
 function ProdutoDetalhesPage() {
   const { id } = Route.useParams();
   const router = useRouter();
-  const { produtos, addPedido } = useStore();
+  const { produtos, addToCart, cart } = useStore();
   const produto = produtos.find((p) => p.id === id);
 
   const goBackToCatalogo = () => {
@@ -38,14 +39,9 @@ function ProdutoDetalhesPage() {
     }
   };
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [form, setForm] = useState({
-    cliente: "",
-    whatsapp: "",
-    quantidade: "1",
-    observacao: "",
-  });
+  const [qtd, setQtd] = useState(1);
+  const [added, setAdded] = useState(false);
+  const itemNoCarrinho = cart.find((c) => c.id === id);
 
   if (!produto) {
     return (
@@ -60,22 +56,13 @@ function ProdutoDetalhesPage() {
     );
   }
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const qtdNum = Number(form.quantidade) || 1;
-    const valorTotal = qtdNum * produto!.preco;
-
-    addPedido({
-      cliente: form.cliente,
-      whatsapp: form.whatsapp,
-      observacao: form.observacao,
-      produto: produto!.nome,
-      quantidade: `${qtdNum} ${produto!.unidade}`,
-      valor: valorTotal,
-    });
-
-    setSuccess(true);
+  function handleAdd() {
+    addToCart(produto!, qtd);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2000);
   }
+
+
 
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans">
@@ -203,146 +190,65 @@ function ProdutoDetalhesPage() {
                 )}
               </div>
               
+              {produto.estoque > 0 && (
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-sm font-medium text-foreground">Quantidade:</span>
+                  <div className="flex items-center border border-border rounded-xl overflow-hidden">
+                    <button
+                      type="button"
+                      onClick={() => setQtd((q) => Math.max(1, q - 1))}
+                      className="size-10 flex items-center justify-center hover:bg-muted disabled:opacity-40"
+                      disabled={qtd <= 1}
+                    >
+                      <Minus className="size-4" />
+                    </button>
+                    <span className="w-10 text-center font-semibold">{qtd}</span>
+                    <button
+                      type="button"
+                      onClick={() => setQtd((q) => Math.min(produto.estoque, q + 1))}
+                      className="size-10 flex items-center justify-center hover:bg-muted disabled:opacity-40"
+                      disabled={qtd >= produto.estoque}
+                    >
+                      <Plus className="size-4" />
+                    </button>
+                  </div>
+                  {itemNoCarrinho && (
+                    <span className="text-xs text-muted-foreground">
+                      {itemNoCarrinho.quantidade} já na sacola
+                    </span>
+                  )}
+                </div>
+              )}
+
               <button
                 disabled={produto.estoque === 0}
+                onClick={handleAdd}
                 className={`w-full flex items-center justify-center gap-3 py-4 md:py-5 rounded-2xl font-bold text-lg transition-all ${
-                  produto.estoque > 0 
-                    ? "bg-primary text-primary-foreground shadow-lg hover:opacity-90 active:scale-[0.98]"
+                  produto.estoque > 0
+                    ? added
+                      ? "bg-green-600 text-white shadow-lg"
+                      : "bg-primary text-primary-foreground shadow-lg hover:opacity-90 active:scale-[0.98]"
                     : "bg-muted text-muted-foreground cursor-not-allowed"
                 }`}
-                onClick={() => setModalOpen(true)}
               >
-                Comprar Agora
+                {added ? (
+                  <>
+                    <CheckCircle2 className="size-5" />
+                    Adicionado à sacola!
+                  </>
+                ) : (
+                  <>
+                    <ShoppingBag className="size-5" />
+                    Adicionar à sacola
+                  </>
+                )}
               </button>
             </div>
           </div>
         </div>
-
-        {/* Modal de Compra */}
-        {modalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
-            <div className="bg-card w-full max-w-lg rounded-3xl shadow-2xl border border-border overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-              
-              {success ? (
-                <div className="p-10 text-center flex flex-col items-center">
-                  <div className="size-16 rounded-full bg-green-100 text-green-600 flex items-center justify-center mb-6">
-                    <CheckCircle2 className="size-8" />
-                  </div>
-                  <h2 className="text-2xl font-bold text-foreground mb-2">Pedido Enviado!</h2>
-                  <p className="text-muted-foreground mb-8">
-                    Seu pedido foi encaminhado diretamente para a Fazenda Boa Terra. O produtor entrará em contato via WhatsApp.
-                  </p>
-                  <button
-                    onClick={() => {
-                      setSuccess(false);
-                      setModalOpen(false);
-                      setForm({ cliente: "", whatsapp: "", quantidade: "1", observacao: "" });
-                      goBackToCatalogo();
-                    }}
-                    className="w-full bg-primary text-primary-foreground font-semibold py-3.5 rounded-xl hover:opacity-90 transition-colors"
-                  >
-                    Voltar ao Catálogo
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <div className="flex items-center justify-between p-6 border-b border-border bg-muted/30">
-                    <div>
-                      <h2 className="text-xl font-bold text-foreground">Finalizar Pedido</h2>
-                      <p className="text-sm text-muted-foreground mt-1">Preencha seus dados para solicitar à fazenda.</p>
-                    </div>
-                    <button
-                      onClick={() => setModalOpen(false)}
-                      className="p-2 rounded-full hover:bg-muted text-muted-foreground transition-colors"
-                    >
-                      <X className="size-5" />
-                    </button>
-                  </div>
-                  
-                  <form onSubmit={handleSubmit} className="p-6 space-y-5">
-                    
-                    {/* Resumo */}
-                    <div className="flex items-center gap-4 p-4 rounded-xl bg-accent/30 border border-border mb-2">
-                      <img src={produto.imagem || FALLBACK_IMG} alt="" className="size-14 rounded-lg object-cover" />
-                      <div>
-                        <div className="font-semibold text-foreground">{produto.nome}</div>
-                        <div className="text-sm text-muted-foreground">{formatBRL(produto.preco)} / {produto.unidade}</div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium text-foreground mb-1.5">Seu Nome</label>
-                        <input
-                          required
-                          type="text"
-                          value={form.cliente}
-                          onChange={(e) => setForm({ ...form, cliente: e.target.value })}
-                          className="w-full border border-border rounded-xl bg-background px-4 py-3 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-                          placeholder="Ex: Maria da Silva"
-                        />
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-foreground mb-1.5">WhatsApp</label>
-                          <input
-                            required
-                            type="tel"
-                            value={form.whatsapp}
-                            onChange={(e) => setForm({ ...form, whatsapp: e.target.value })}
-                            className="w-full border border-border rounded-xl bg-background px-4 py-3 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-                            placeholder="(00) 00000-0000"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-foreground mb-1.5">Quantidade</label>
-                          <input
-                            required
-                            type="number"
-                            min="1"
-                            max={produto.estoque}
-                            value={form.quantidade}
-                            onChange={(e) => setForm({ ...form, quantidade: e.target.value })}
-                            className="w-full border border-border rounded-xl bg-background px-4 py-3 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-foreground mb-1.5">Observação (Opcional)</label>
-                        <textarea
-                          value={form.observacao}
-                          onChange={(e) => setForm({ ...form, observacao: e.target.value })}
-                          className="w-full border border-border rounded-xl bg-background px-4 py-3 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all resize-none h-24"
-                          placeholder="Alguma preferência de entrega ou detalhe?"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="pt-4 mt-2 border-t border-border flex items-center justify-between">
-                      <div>
-                        <div className="text-sm text-muted-foreground">Total estimado:</div>
-                        <div className="text-2xl font-bold text-primary">
-                          {formatBRL(produto.preco * (Number(form.quantidade) || 1))}
-                        </div>
-                      </div>
-                      <button
-                        type="submit"
-                        className="bg-primary text-primary-foreground px-6 py-3.5 rounded-xl font-bold shadow-sm hover:opacity-90 active:scale-[0.98] transition-all"
-                      >
-                        Enviar Pedido
-                      </button>
-                    </div>
-
-                  </form>
-                </>
-              )}
-            </div>
-          </div>
-        )}
       </main>
       <FloatingWhatsApp />
+      <CartDrawer />
     </div>
   );
 }

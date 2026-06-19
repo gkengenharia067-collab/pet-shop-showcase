@@ -46,16 +46,29 @@ function PedidosPage() {
           <tbody>
             {pedidos.map((p, i) => (
               <tr key={p.id} className={i !== 0 ? "border-t border-border" : ""}>
-                <td className="px-5 py-4 font-medium">
+                <td className="px-5 py-4 font-medium align-top">
                   <div>{p.cliente}</div>
                   {p.whatsapp && <div className="text-xs text-muted-foreground mt-0.5">WhatsApp: {p.whatsapp}</div>}
                   {p.observacao && <div className="text-xs text-muted-foreground mt-0.5 italic">"{p.observacao}"</div>}
                 </td>
-                <td className="px-5 py-4">{p.produto}</td>
-                <td className="px-5 py-4">{p.quantidade}</td>
-                <td className="px-5 py-4 font-semibold">{formatBRL(p.valor)}</td>
-                <td className="px-5 py-4"><StatusBadge status={p.status} /></td>
-                <td className="px-5 py-4 text-right">
+                <td className="px-5 py-4 align-top">
+                  {p.itens && p.itens.length > 0 ? (
+                    <ul className="space-y-0.5 text-sm">
+                      {p.itens.map((it, idx) => (
+                        <li key={idx}>
+                          <span className="font-medium">{it.quantidade}×</span> {it.produto}
+                          <span className="text-muted-foreground"> · {formatBRL(it.preco)}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    p.produto
+                  )}
+                </td>
+                <td className="px-5 py-4 align-top">{p.quantidade}</td>
+                <td className="px-5 py-4 font-semibold align-top">{formatBRL(p.valor)}</td>
+                <td className="px-5 py-4 align-top"><StatusBadge status={p.status} /></td>
+                <td className="px-5 py-4 text-right align-top">
                   <select
                     value={p.status}
                     onChange={(e) => alterarStatusPedido(p.id, e.target.value as StatusPedido)}
@@ -87,8 +100,21 @@ function PedidosPage() {
             {p.observacao && <div className="text-sm text-muted-foreground mt-1 italic">"{p.observacao}"</div>}
             
             <div className="mt-3 text-sm border-t border-border pt-3">
-              <div><span className="text-muted-foreground">Produto:</span> {p.produto}</div>
-              <div><span className="text-muted-foreground">Qtd:</span> {p.quantidade}</div>
+              {p.itens && p.itens.length > 0 ? (
+                <ul className="space-y-1 mb-1">
+                  {p.itens.map((it, idx) => (
+                    <li key={idx} className="flex justify-between">
+                      <span><span className="font-medium">{it.quantidade}×</span> {it.produto}</span>
+                      <span className="text-muted-foreground">{formatBRL(it.preco * it.quantidade)}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <>
+                  <div><span className="text-muted-foreground">Produto:</span> {p.produto}</div>
+                  <div><span className="text-muted-foreground">Qtd:</span> {p.quantidade}</div>
+                </>
+              )}
               <div className="mt-1 text-lg font-semibold text-primary">{formatBRL(p.valor)}</div>
             </div>
             

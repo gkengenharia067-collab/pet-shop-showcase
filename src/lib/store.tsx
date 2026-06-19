@@ -12,6 +12,14 @@ export type Produto = {
 
 export type StatusPedido = "Pendente" | "Em preparação" | "Entregue";
 
+export type PedidoItem = {
+  produto: string;
+  quantidade: number;
+  preco: number;
+  unidade?: string;
+  imagem?: string;
+};
+
 export type Pedido = {
   id: string;
   cliente: string;
@@ -22,6 +30,17 @@ export type Pedido = {
   valor: number;
   data: string;
   status: StatusPedido;
+  itens?: PedidoItem[];
+};
+
+export type CartItem = {
+  id: string; // produto id
+  nome: string;
+  preco: number;
+  unidade: string;
+  imagem: string;
+  estoque: number;
+  quantidade: number;
 };
 
 const produtosIniciais: Produto[] = [
@@ -36,6 +55,8 @@ const pedidosIniciais: Pedido[] = [
   { id: "o3", cliente: "Pedro Lima", produto: "Ovos caipiras", quantidade: "3", valor: 66, data: "12/06", status: "Entregue" },
 ];
 
+type CheckoutInfo = { cliente: string; whatsapp?: string; observacao?: string };
+
 type Ctx = {
   produtos: Produto[];
   pedidos: Pedido[];
@@ -45,6 +66,13 @@ type Ctx = {
   alterarStatusPedido: (id: string, status: StatusPedido) => void;
   addPedido: (pedido: Omit<Pedido, "id" | "data" | "status">) => void;
   vendasPeriodo: number;
+  // Cart
+  cart: CartItem[];
+  addToCart: (produto: Produto, quantidade?: number) => void;
+  removeFromCart: (id: string) => void;
+  updateCartQty: (id: string, quantidade: number) => void;
+  clearCart: () => void;
+  checkoutCart: (info: CheckoutInfo) => Pedido | null;
 };
 
 const StoreContext = createContext<Ctx | null>(null);
@@ -68,6 +96,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }
   });
 
+  const [cart, setCart] = useState<CartItem[]>(() => {
+    try {
+      const saved = localStorage.getItem("@mr/cart");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
   const [vendasPeriodo, setVendasPeriodo] = useState(() => {
     try {
       const saved = localStorage.getItem("@mr/vendas");
@@ -80,7 +117,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     localStorage.setItem("@mr/produtos.v2", JSON.stringify(produtos));
   }, [produtos]);
-  
+
+  useEffect(() => {
+    localStorage.setItem("@mr/cart", JSON.stringify(cart));
+  }, [cart]);
+
   useEffect(() => {
     localStorage.setItem("@mr/pedidos", JSON.stringify(pedidos));
     const novasVendas = pedidos.filter(p => p.status === "Entregue").reduce((acc, p) => acc + p.valor, 0) || 850;
@@ -90,15 +131,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const handleStorage = (e: StorageEvent) => {
-      if (e.key === "@mr/pedidos" && e.newValue) {
-        setPedidos(JSON.parse(e.newValue));
-      }
-      if (e.key === "@mr/produtos.v2" && e.newValue) {
-        setProdutos(JSON.parse(e.newValue));
-      }
-      if (e.key === "@mr/vendas" && e.newValue) {
-        setVendasPeriodo(JSON.parse(e.newValue));
-      }
+      if (e.key === "@mr/pedidos" && e.newValue) setPedidos(JSON.parse(e.newValue));
+      if (e.key === "@mr/produtos.v2" && e.newValue) setProdutos(JSON.parse(e.newValue));
+      if (e.key === "@mr/vendas" && e.newValue) setVendasPeriodo(JSON.parse(e.newValue));
+      if (e.key === "@mr/cart" && e.newValue) setCart(JSON.parse(e.newValue));
     };
     window.addEventListener("storage", handleStorage);
     return () => window.removeEventListener("storage", handleStorage);
@@ -129,6 +165,67 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setPedidos((prev) => [novoPedido, ...prev]);
     },
     vendasPeriodo,
+    cart,
+    addToCart: (produto, quantidade = 1) => {
+      setCart((prev) => {
+        const existing = prev.find((c) => c.id === produto.id);
+        if (existing) {
+          const novaQtd = Math.min(existing.quantidade + quantidade, produto.estoque);
+          return prev.map((c) => (c.id === produto.id ? { ...c, quantidade: novaQtd } : c));
+        }
+        return [
+          ...prev,
+          {
+            id: produto.id,
+            nome: produto.nome,
+            preco: produto.preco,
+            unidade: produto.unidade,
+            imagem: produto.imagem,
+            estoque: produto.estoque,
+            quantidade: Math.min(quantidade, produto.estoque),
+          },
+        ];
+      });
+    },
+    removeFromCart: (id) => setCart((prev) => prev.filter((c) => c.id !== id)),
+    updateCartQty: (id, quantidade) =>
+      setCart((prev) =>
+        prev.map((c) =>
+          c.id === id ? { ...c, quantidade: Math.max(1, Math.min(quantidade, c.estoque)) } : c,
+        ),
+      ),
+    clearCart: () => setCart([]),
+    checkoutCart: (info) => {
+      if (cart.length === 0) return null;
+      const itens: PedidoItem[] = cart.map((c) => ({
+        produto: c.nome,
+        quantidade: c.quantidade,
+        preco: c.preco,
+        unidade: c.unidade,
+        imagem: c.imagem,
+      }));
+      const valor = itens.reduce((acc, it) => acc + it.preco * it.quantidade, 0);
+      const totalQtd = itens.reduce((acc, it) => acc + it.quantidade, 0);
+      const produtoLabel =
+        itens.length === 1
+          ? itens[0].produto
+          : `${itens[0].produto} +${itens.length - 1} ${itens.length - 1 === 1 ? "item" : "itens"}`;
+      const novoPedido: Pedido = {
+        id: crypto.randomUUID(),
+        cliente: info.cliente,
+        whatsapp: info.whatsapp,
+        observacao: info.observacao,
+        produto: produtoLabel,
+        quantidade: String(totalQtd),
+        valor,
+        data: new Date().toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }),
+        status: "Pendente",
+        itens,
+      };
+      setPedidos((prev) => [novoPedido, ...prev]);
+      setCart([]);
+      return novoPedido;
+    },
   };
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
