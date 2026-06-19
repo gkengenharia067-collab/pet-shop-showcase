@@ -25,7 +25,7 @@ function getShortDescription(categoria: string) {
 }
 
 function CatalogoPage() {
-  const { produtos } = useStore();
+  const { produtos, addToCart } = useStore();
 
   return (
     <div className="min-h-screen bg-background">
