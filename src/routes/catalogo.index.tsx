@@ -150,18 +150,28 @@ function CatalogoPage() {
                       </span>
                     </div>
 
-                    <Link
-                      to="/catalogo/$id"
-                      params={{ id: p.id }}
-                      disabled={p.estoque === 0}
-                      className={`w-full inline-flex items-center justify-center px-4 py-3 rounded-xl font-semibold transition-all ${
-                        p.estoque > 0 
-                          ? "bg-primary text-primary-foreground hover:opacity-90 shadow-sm hover:shadow-md"
-                          : "bg-muted text-muted-foreground cursor-not-allowed"
-                      }`}
-                    >
-                      {p.estoque > 0 ? "Ver Detalhes" : "Indisponível"}
-                    </Link>
+                    <div className="flex gap-2">
+                      <Link
+                        to="/catalogo/$id"
+                        params={{ id: p.id }}
+                        className="flex-1 inline-flex items-center justify-center px-3 py-3 rounded-xl font-semibold border border-border hover:bg-muted transition-all text-sm"
+                      >
+                        Detalhes
+                      </Link>
+                      <button
+                        type="button"
+                        disabled={p.estoque === 0}
+                        onClick={() => addToCart(p, 1)}
+                        className={`flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-3 rounded-xl font-semibold transition-all text-sm ${
+                          p.estoque > 0
+                            ? "bg-primary text-primary-foreground hover:opacity-90 shadow-sm hover:shadow-md"
+                            : "bg-muted text-muted-foreground cursor-not-allowed"
+                        }`}
+                      >
+                        <Plus className="size-4" />
+                        {p.estoque > 0 ? "Sacola" : "Indisponível"}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </article>
