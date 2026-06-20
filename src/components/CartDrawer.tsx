@@ -18,6 +18,10 @@ export function CartDrawer({ onOpenChange }: { onOpenChange?: (open: boolean) =>
 
   useEffect(() => setMounted(true), []);
 
+  useEffect(() => {
+    onOpenChange?.(open);
+  }, [open, onOpenChange]);
+
   const totalItens = cart.reduce((a, c) => a + c.quantidade, 0);
   const totalValor = cart.reduce((a, c) => a + c.preco * c.quantidade, 0);
 
