@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Leaf, MapPin, ShieldCheck, Truck, Plus } from "lucide-react";
+import { useState } from "react";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 import { CartDrawer } from "@/components/CartDrawer";
 import { useStore } from "@/lib/store";
@@ -26,6 +27,7 @@ function getShortDescription(categoria: string) {
 
 function CatalogoPage() {
   const { produtos, addToCart } = useStore();
+  const [cartOpen, setCartOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">
@@ -45,10 +47,14 @@ function CatalogoPage() {
             <a href="#contato" className="hover:text-foreground cursor-pointer transition-colors">Contato</a>
           </nav>
         </div>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 pb-3 flex justify-end">
-          <CartDrawer />
-        </div>
       </header>
+
+      {/* Cart bar */}
+      <div className="bg-card border-b border-border">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex justify-end">
+          <CartDrawer onOpenChange={setCartOpen} />
+        </div>
+      </div>
 
       <main>
         {/* Hero Section */}
@@ -221,7 +227,7 @@ function CatalogoPage() {
           </div>
         </section>
       </main>
-      <FloatingWhatsApp />
+      {!cartOpen && <FloatingWhatsApp />}
     </div>
   );
 }

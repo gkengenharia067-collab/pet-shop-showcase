@@ -8,7 +8,7 @@ function formatBRL(n: number) {
 
 const FALLBACK_IMG = "https://images.unsplash.com/photo-1595859703065-cc958019e07b?w=400&q=80";
 
-export function CartDrawer() {
+export function CartDrawer({ onOpenChange }: { onOpenChange?: (open: boolean) => void } = {}) {
   const { cart, removeFromCart, updateCartQty, checkoutCart } = useStore();
   const [open, setOpen] = useState(false);
   const [checkout, setCheckout] = useState(false);
@@ -17,6 +17,10 @@ export function CartDrawer() {
   const [form, setForm] = useState({ cliente: "", whatsapp: "", observacao: "" });
 
   useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    onOpenChange?.(open);
+  }, [open, onOpenChange]);
 
   const totalItens = cart.reduce((a, c) => a + c.quantidade, 0);
   const totalValor = cart.reduce((a, c) => a + c.preco * c.quantidade, 0);
