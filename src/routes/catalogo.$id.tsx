@@ -84,9 +84,15 @@ function ProdutoDetalhesPage() {
             </div>
             <div className="font-display font-semibold text-lg text-foreground tracking-tight">Terra Viva</div>
           </div>
-          <CartDrawer />
         </div>
       </header>
+
+      {/* Cart bar */}
+      <div className="bg-card border-b border-border">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex justify-end">
+          <CartDrawer onOpenChange={setCartOpen} />
+        </div>
+      </div>
 
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 md:py-12 relative">
         {/* Breadcrumb */}
