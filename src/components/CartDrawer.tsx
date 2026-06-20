@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ShoppingBag, X, Plus, Minus, Trash2, CheckCircle2 } from "lucide-react";
 import { useStore } from "@/lib/store";
 
