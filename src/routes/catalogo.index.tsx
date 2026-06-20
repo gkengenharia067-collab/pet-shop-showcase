@@ -45,6 +45,9 @@ function CatalogoPage() {
             <a href="#contato" className="hover:text-foreground cursor-pointer transition-colors">Contato</a>
           </nav>
         </div>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 pb-3 flex justify-end">
+          <CartDrawer />
+        </div>
       </header>
 
       <main>
