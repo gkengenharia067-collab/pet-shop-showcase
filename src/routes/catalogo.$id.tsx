@@ -42,6 +42,8 @@ function ProdutoDetalhesPage() {
   const [qtd, setQtd] = useState(1);
   const [added, setAdded] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const itemNoCarrinho = cart.find((c) => c.id === id);
 
   if (!produto) {
