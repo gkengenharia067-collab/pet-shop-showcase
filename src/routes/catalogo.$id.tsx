@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { ArrowLeft, Leaf, MapPin, ShieldCheck, Truck, ChevronRight, Info, Plus, Minus, ShoppingBag, CheckCircle2 } from "lucide-react";
 import { useStore } from "@/lib/store";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 import { CartDrawer } from "@/components/CartDrawer";
 
