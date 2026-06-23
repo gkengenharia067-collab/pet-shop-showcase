@@ -46,26 +46,28 @@ export function CartDrawer({ onOpenChange }: { onOpenChange?: (open: boolean) =>
 
   return (
     <>
-            {/* Floating cart trigger - sem barra branca */}
-      <div className="fixed bottom-40 right-5 z-50">
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          className="inline-flex items-center gap-2 px-4 h-11 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl hover:opacity-95 transition-all font-semibold"
-          aria-label="Abrir sacola"
-        >
-          <div className="relative">
-            <ShoppingBag className="size-5" />
-            {mounted && totalItens > 0 && (
-              <span className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground text-[10px] font-bold rounded-full size-5 flex items-center justify-center border-2 border-primary">
-                {totalItens}
-              </span>
-            )}
-          </div>
-          <span className="text-sm whitespace-nowrap">
-            Sacola{mounted ? ` (${totalItens} ${totalItens === 1 ? "item" : "itens"})` : ""}
-          </span>
-        </button>
+      {/* Sacola sticky no topo - sem barra branca */}
+      <div className="sticky top-[70px] z-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex justify-end">
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            className="inline-flex items-center gap-2 px-4 h-11 rounded-full bg-primary text-primary-foreground shadow-sm hover:shadow-md hover:opacity-95 transition-all font-semibold"
+            aria-label="Abrir sacola"
+          >
+            <div className="relative">
+              <ShoppingBag className="size-5" />
+              {mounted && totalItens > 0 && (
+                <span className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground text-[10px] font-bold rounded-full size-5 flex items-center justify-center border-2 border-primary">
+                  {totalItens}
+                </span>
+              )}
+            </div>
+            <span className="text-sm whitespace-nowrap">
+              Sacola{mounted ? ` (${totalItens} ${totalItens === 1 ? "item" : "itens"})` : ""}
+            </span>
+          </button>
+        </div>
       </div>
 
       {open && (
