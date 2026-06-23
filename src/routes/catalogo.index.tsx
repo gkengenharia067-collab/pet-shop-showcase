@@ -2,7 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Leaf, MapPin, ShieldCheck, Truck, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
-import { CartDrawer } from "@/components/CartDrawer";
 import { useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/catalogo/")({
@@ -14,7 +13,6 @@ function formatBRL(n: number) {
 }
 
 const FALLBACK_IMG = "https://images.unsplash.com/photo-1595859703065-cc958019e07b?w=800&q=80";
-
 
 function getShortDescription(categoria: string) {
   const map: Record<string, string> = {
@@ -50,8 +48,6 @@ function CatalogoPage() {
           </nav>
         </div>
       </header>
-
-      <CartDrawer onOpenChange={setCartOpen} />
 
       <main>
         {/* Hero Section */}
@@ -119,12 +115,9 @@ function CatalogoPage() {
               >
                 <div className="relative h-56 bg-muted overflow-hidden">
                   <img 
-                    src={p.imagem || FALLBACK_IMG}  
+                    src={p.imagem || FALLBACK_IMG} 
                     alt={p.nome} 
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    onError={(e) => {
-                      e.currentTarget.src = FALLBACK_IMG;
-                      }}
                   />
                   {p.estoque === 0 && (
                     <div className="absolute inset-0 bg-background/60 flex items-center justify-center backdrop-blur-[2px]">
