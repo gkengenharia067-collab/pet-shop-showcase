@@ -47,7 +47,7 @@ export function CartDrawer({ onOpenChange }: { onOpenChange?: (open: boolean) =>
   return (
     <>
             {/* Floating cart trigger - sem barra branca */}
-      <div className="fixed bottom-24 right-5 z-50">
+      <div className="fixed bottom-40 right-5 z-50">
         <button
           type="button"
           onClick={() => setOpen(true)}
