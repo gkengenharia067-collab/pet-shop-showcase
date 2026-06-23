@@ -51,10 +51,7 @@ function CatalogoPage() {
         </div>
       </header>
 
-      {/* Cart inline */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-4 flex justify-end">
-        <CartDrawer onOpenChange={setCartOpen} />
-      </div>
+      <CartDrawer onOpenChange={setCartOpen} />
 
       <main>
         {/* Hero Section */}
