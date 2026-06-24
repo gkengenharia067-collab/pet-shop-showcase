@@ -11,10 +11,7 @@ function formatBRL(n: number) {
   return n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
-// 🔥 FALLBACK para imagens que não carregarem (ADICIONADO)
 const FALLBACK_IMG = "https://images.unsplash.com/photo-1595859703065-cc958019e07b?w=800&q=80";
-
-// 🔥 FUNÇÃO getProductImage REMOVIDA – não é mais necessária
 
 function ProdutorPerfilPage() {
   const { produtos } = useStore();
@@ -155,7 +152,6 @@ function ProdutorPerfilPage() {
                   className="group flex gap-4 bg-card rounded-2xl p-4 border border-border hover:border-primary/50 transition-all hover:shadow-md"
                 >
                   <div className="size-24 rounded-xl overflow-hidden shrink-0 bg-muted">
-                    {/* 🔥 CORRIGIDO: usa a imagem real do produto com fallback */}
                     <img 
                       src={p.imagem || FALLBACK_IMG} 
                       alt={p.nome} 
