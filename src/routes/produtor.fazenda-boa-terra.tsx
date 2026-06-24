@@ -16,10 +16,9 @@ const FALLBACK_IMG = "https://images.unsplash.com/photo-1595859703065-cc958019e0
 
 function ProdutorPerfilPage() {
   const { produtos } = useStore();
-  const [produtosLocal, setProdutosLocal] = useState<Produto[]>(produtos);
+  const [produtosLocal, setProdutosLocal] = useState<Produto[]>([]);
   const [mounted, setMounted] = useState(false);
 
-  // 🔥 Carrega do localStorage APENAS no cliente
   useEffect(() => {
     setMounted(true);
     try {
@@ -37,13 +36,34 @@ function ProdutorPerfilPage() {
     setProdutosLocal(produtos);
   }, [produtos]);
 
-  // 🔥 Usa produtos do store no servidor, e do localStorage no cliente
-  const produtosExibir = mounted ? produtosLocal : produtos;
+  // 🔥 Servidor renderiza array vazio (mostra "Carregando...")
+  // 🔥 Cliente renderiza a lista do localStorage
+  const produtosExibir = mounted ? produtosLocal : [];
 
   if (!produtosExibir || produtosExibir.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center text-muted-foreground">Carregando produtos...</div>
+      <div className="min-h-screen bg-background pb-20">
+        <header className="bg-card border-b border-border sticky top-0 z-50">
+          <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+            <Link to="/catalogo" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors font-medium text-sm">
+              <ArrowLeft className="size-4" />
+              Voltar ao Catálogo
+            </Link>
+            <div className="flex items-center gap-2">
+              <div className="size-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center shadow-sm">
+                <Leaf className="size-4" />
+              </div>
+              <div className="font-display font-semibold text-lg text-foreground tracking-tight">Terra Viva</div>
+            </div>
+          </div>
+        </header>
+        <div className="h-64 md:h-80 w-full overflow-hidden bg-muted">
+          <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=2000&q=80" alt="Capa da Fazenda" className="w-full h-full object-cover opacity-90" />
+        </div>
+        <main className="max-w-5xl mx-auto px-4 sm:px-6 mt-10">
+          <div className="text-center text-muted-foreground">Carregando produtos...</div>
+        </main>
+        <FloatingWhatsApp />
       </div>
     );
   }
