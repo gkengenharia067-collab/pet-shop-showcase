@@ -11,14 +11,10 @@ function formatBRL(n: number) {
   return n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
-function getProductImage(nome: string) {
-  const map: Record<string, string> = {
-    "Tomate orgânico": "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=800&q=80",
-    "Mel artesanal": "https://images.unsplash.com/photo-1587049352851-8d4e89133924?auto=format&fit=crop&w=1200&q=80",
-    "Ovos caipiras": "https://images.unsplash.com/photo-1587486913049-53fc88980cfc?w=800&q=80",
-  };
-  return map[nome] || "https://images.unsplash.com/photo-1595859703065-cc958019e07b?w=800&q=80";
-}
+// 🔥 FALLBACK para imagens que não carregarem (ADICIONADO)
+const FALLBACK_IMG = "https://images.unsplash.com/photo-1595859703065-cc958019e07b?w=800&q=80";
+
+// 🔥 FUNÇÃO getProductImage REMOVIDA – não é mais necessária
 
 function ProdutorPerfilPage() {
   const { produtos } = useStore();
@@ -159,7 +155,12 @@ function ProdutorPerfilPage() {
                   className="group flex gap-4 bg-card rounded-2xl p-4 border border-border hover:border-primary/50 transition-all hover:shadow-md"
                 >
                   <div className="size-24 rounded-xl overflow-hidden shrink-0 bg-muted">
-                    <img src={getProductImage(p.nome)} alt={p.nome} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                    {/* 🔥 CORRIGIDO: usa a imagem real do produto com fallback */}
+                    <img 
+                      src={p.imagem || FALLBACK_IMG} 
+                      alt={p.nome} 
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                    />
                   </div>
                   <div className="flex flex-col justify-center">
                     <h3 className="font-bold text-foreground group-hover:text-primary transition-colors">{p.nome}</h3>
