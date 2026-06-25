@@ -18,9 +18,23 @@ const FALLBACK_IMG = "https://images.unsplash.com/photo-1595859703065-cc958019e0
 function getFazenda() {
   try {
     const saved = localStorage.getItem('@mr/fazenda');
-    return saved ? JSON.parse(saved) : { nome: 'Terra Viva', cidade: 'Serra do Vale, MG', descricao: '', whatsapp: '' };
+    return saved ? JSON.parse(saved) : { 
+      nome: 'Terra Viva', 
+      cidade: 'Serra do Vale, MG', 
+      descricao: '', 
+      whatsapp: '',
+      logo: '',
+      capa: ''
+    };
   } catch {
-    return { nome: 'Terra Viva', cidade: 'Serra do Vale, MG', descricao: '', whatsapp: '' };
+    return { 
+      nome: 'Terra Viva', 
+      cidade: 'Serra do Vale, MG', 
+      descricao: '', 
+      whatsapp: '',
+      logo: '',
+      capa: ''
+    };
   }
 }
 
@@ -87,9 +101,13 @@ function ProdutoDetalhesPage() {
             Voltar ao painel
           </Link>
           <div className="flex items-center gap-2.5">
-            <div className="size-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center shadow-sm">
-              <Leaf className="size-4" />
-            </div>
+            {fazenda.logo ? (
+              <img src={fazenda.logo} alt="Logo" className="h-8 w-auto object-contain" />
+            ) : (
+              <div className="size-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center shadow-sm">
+                <Leaf className="size-4" />
+              </div>
+            )}
             <div className="font-display font-semibold text-lg text-foreground tracking-tight">{fazenda.nome}</div>
           </div>
         </div>
@@ -168,7 +186,7 @@ function ProdutoDetalhesPage() {
             >
               <div className="flex items-center gap-4">
                 <img 
-                  src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=100&h=100&fit=crop&q=80" 
+                  src={fazenda.logo || "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=100&h=100&fit=crop&q=80"} 
                   alt={fazenda.nome}
                   className="size-14 rounded-full border-2 border-border shadow-sm object-cover group-hover:scale-105 transition-transform"
                 />
