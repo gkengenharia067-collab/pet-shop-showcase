@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Leaf, MapPin, ShieldCheck, Truck, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
+import { CartDrawer } from "@/components/CartDrawer";
 import { useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/catalogo/")({
@@ -48,6 +49,9 @@ function CatalogoPage() {
           </nav>
         </div>
       </header>
+
+      {/* 🔥 SACOLA STICKY NO TOPO (ABAIXO DO HEADER) */}
+      <CartDrawer onOpenChange={setCartOpen} />
 
       <main>
         {/* Hero Section */}
