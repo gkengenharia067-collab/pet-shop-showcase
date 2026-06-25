@@ -14,13 +14,28 @@ function formatBRL(n: number) {
 }
 
 const FALLBACK_IMG = "https://images.unsplash.com/photo-1595859703065-cc958019e07b?w=800&q=80";
+const FALLBACK_CAPA = "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=2000&q=80";
 
 function getFazenda() {
   try {
     const saved = localStorage.getItem('@mr/fazenda');
-    return saved ? JSON.parse(saved) : { nome: 'Terra Viva', cidade: 'Serra do Vale, MG', descricao: '', whatsapp: '' };
+    return saved ? JSON.parse(saved) : { 
+      nome: 'Terra Viva', 
+      cidade: 'Serra do Vale, MG', 
+      descricao: '', 
+      whatsapp: '',
+      logo: '',
+      capa: ''
+    };
   } catch {
-    return { nome: 'Terra Viva', cidade: 'Serra do Vale, MG', descricao: '', whatsapp: '' };
+    return { 
+      nome: 'Terra Viva', 
+      cidade: 'Serra do Vale, MG', 
+      descricao: '', 
+      whatsapp: '',
+      logo: '',
+      capa: ''
+    };
   }
 }
 
@@ -47,9 +62,13 @@ function CatalogoPage() {
       <header className="bg-card border-b border-border sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="size-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-sm">
-              <Leaf className="size-5" />
-            </div>
+            {fazenda.logo ? (
+              <img src={fazenda.logo} alt="Logo" className="h-9 w-auto object-contain" />
+            ) : (
+              <div className="size-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-sm">
+                <Leaf className="size-5" />
+              </div>
+            )}
             <div className="font-display font-bold text-xl text-foreground tracking-tight">{fazenda.nome}</div>
           </div>
           <nav className="hidden sm:flex items-center gap-6 text-sm font-medium text-muted-foreground">
@@ -69,11 +88,11 @@ function CatalogoPage() {
       <CartDrawer onOpenChange={setCartOpen} />
 
       <main>
-        {/* Hero Section */}
+        {/* Hero Section com foto de capa personalizada */}
         <section className="relative bg-card border-b border-border overflow-hidden">
           <div className="absolute inset-0 z-0">
             <img 
-              src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=2000&q=80" 
+              src={fazenda.capa || FALLBACK_CAPA} 
               alt="Capa da Fazenda" 
               className="w-full h-full object-cover opacity-20"
             />
