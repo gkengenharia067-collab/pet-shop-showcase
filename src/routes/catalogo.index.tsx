@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Leaf, MapPin, ShieldCheck, Truck, Plus, ArrowLeft } from "lucide-react";
+import { Leaf, MapPin, ShieldCheck, Truck, Plus, ArrowLeft, Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 import { CartDrawer } from "@/components/CartDrawer";
@@ -52,6 +52,7 @@ function CatalogoPage() {
   const { produtos, addToCart } = useStore();
   const [cartOpen, setCartOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [menuAberto, setMenuAberto] = useState(false);
   useEffect(() => setMounted(true), []);
 
   const fazenda = getFazenda();
@@ -71,6 +72,8 @@ function CatalogoPage() {
             )}
             <div className="font-display font-bold text-xl text-foreground tracking-tight">{fazenda.nome}</div>
           </div>
+
+          {/* 🔥 MENU DESKTOP (aparece apenas em telas >= sm) */}
           <nav className="hidden sm:flex items-center gap-6 text-sm font-medium text-muted-foreground">
             <Link to="/" className="flex items-center gap-2 text-primary font-semibold hover:opacity-80 transition-all">
               <ArrowLeft className="size-4" />
@@ -81,10 +84,34 @@ function CatalogoPage() {
             <Link to="/produtor/fazenda-boa-terra" className="hover:text-foreground cursor-pointer transition-colors">Sobre a Fazenda</Link>
             <a href="#contato" className="hover:text-foreground cursor-pointer transition-colors">Contato</a>
           </nav>
+
+          {/* 🔥 BOTÃO HAMBÚRGUER (aparece apenas em telas menores que sm) */}
+          <button
+            type="button"
+            onClick={() => setMenuAberto(!menuAberto)}
+            className="sm:hidden p-2 rounded-lg hover:bg-muted transition-colors"
+            aria-label="Abrir menu"
+          >
+            {menuAberto ? <X className="size-6" /> : <Menu className="size-6" />}
+          </button>
         </div>
+
+        {/* 🔥 MENU MOBILE (dropdown) */}
+        {menuAberto && (
+          <div className="sm:hidden bg-card border-t border-border p-4 flex flex-col gap-3 text-sm font-medium">
+            <Link to="/" className="flex items-center gap-2 text-primary font-semibold" onClick={() => setMenuAberto(false)}>
+              <ArrowLeft className="size-4" />
+              Voltar ao painel
+            </Link>
+            <Link to="/catalogo" className="text-primary font-semibold" onClick={() => setMenuAberto(false)}>Início</Link>
+            <a href="#produtos" className="hover:text-foreground transition-colors" onClick={() => setMenuAberto(false)}>Produtos</a>
+            <Link to="/produtor/fazenda-boa-terra" className="hover:text-foreground transition-colors" onClick={() => setMenuAberto(false)}>Sobre a Fazenda</Link>
+            <a href="#contato" className="hover:text-foreground transition-colors" onClick={() => setMenuAberto(false)}>Contato</a>
+          </div>
+        )}
       </header>
 
-      {/* 🔥 SACOLA STICKY NO TOPO */}
+      {/* SACOLA STICKY NO TOPO */}
       <CartDrawer onOpenChange={setCartOpen} />
 
       <main>
