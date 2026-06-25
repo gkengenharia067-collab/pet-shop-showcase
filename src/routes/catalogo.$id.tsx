@@ -15,6 +15,16 @@ function formatBRL(n: number) {
 
 const FALLBACK_IMG = "https://images.unsplash.com/photo-1595859703065-cc958019e07b?w=1200&q=80";
 
+// 🔥 Função para carregar os dados da fazenda do localStorage
+function getFazenda() {
+  try {
+    const saved = localStorage.getItem('@mr/fazenda');
+    return saved ? JSON.parse(saved) : { nome: 'Terra Viva', cidade: 'Serra do Vale, MG', descricao: '', whatsapp: '' };
+  } catch {
+    return { nome: 'Terra Viva', cidade: 'Serra do Vale, MG', descricao: '', whatsapp: '' };
+  }
+}
+
 function getFullDescription(nome: string, categoria: string) {
   const map: Record<string, string> = {
     "Tomate orgânico": "Nossos tomates são cultivados em solo rico e orgânico, sem adição de produtos químicos. Eles amadurecem no pé, garantindo um sabor adocicado, coloração vibrante e textura suculenta. Perfeitos para molhos artesanais, saladas frescas ou para comer como petisco.",
@@ -29,6 +39,7 @@ function ProdutoDetalhesPage() {
   const router = useRouter();
   const { produtos, addToCart, cart } = useStore();
   const produto = produtos.find((p) => p.id === id);
+  const fazenda = getFazenda();
 
   const goBackToCatalogo = () => {
     if (typeof window !== "undefined" && window.history.length > 1) {
@@ -81,12 +92,12 @@ function ProdutoDetalhesPage() {
             <div className="size-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center shadow-sm">
               <Leaf className="size-4" />
             </div>
-            <div className="font-display font-semibold text-lg text-foreground tracking-tight">Terra Viva</div>
+            <div className="font-display font-semibold text-lg text-foreground tracking-tight">{fazenda.nome}</div>
           </div>
         </div>
       </header>
 
-      {/* 🔥 SACOLA STICKY NO TOPO (ABAIXO DO HEADER) */}
+      {/* 🔥 SACOLA STICKY NO TOPO */}
       <CartDrawer onOpenChange={setCartOpen} />
 
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 md:py-12 relative">
@@ -160,13 +171,13 @@ function ProdutoDetalhesPage() {
               <div className="flex items-center gap-4">
                 <img 
                   src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=100&h=100&fit=crop&q=80" 
-                  alt="Fazenda Boa Terra"
+                  alt={fazenda.nome}
                   className="size-14 rounded-full border-2 border-border shadow-sm object-cover group-hover:scale-105 transition-transform"
                 />
                 <div>
-                  <h3 className="font-bold text-foreground text-lg group-hover:text-primary transition-colors">Fazenda Boa Terra</h3>
+                  <h3 className="font-bold text-foreground text-lg group-hover:text-primary transition-colors">{fazenda.nome}</h3>
                   <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-0.5">
-                    <MapPin className="size-4" /> Serra do Vale, MG
+                    <MapPin className="size-4" /> {fazenda.cidade || "Serra do Vale, MG"}
                   </div>
                 </div>
               </div>
