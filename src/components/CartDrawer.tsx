@@ -46,12 +46,12 @@ export function CartDrawer({ onOpenChange }: { onOpenChange?: (open: boolean) =>
       }
       numeroWhatsApp = numeroWhatsApp.replace(/\D/g, '');
 
-      // 🔥 MENSAGEM FORMATADA COM EMOJIS
       const itensTexto = pedido.itens
         ? pedido.itens.map((item) => `• ${item.quantidade}x ${item.produto}`).join('\n')
         : `• ${pedido.quantidade}x ${pedido.produto}`;
 
-      const mensagem = `🌱 *NOVO PEDIDO*\n\n👤 Cliente: ${pedido.cliente}\n📞 Telefone: ${form.whatsapp || 'Não informado'}\n\n🛒 *ITENS:*\n${itensTexto}\n\n📝 Observações: ${form.observacao || 'Nenhuma'}\n\n💰 *TOTAL: R$ ${pedido.valor.toFixed(2)}*`;
+      // 🔥 MENSAGEM COM EMOJIS EM UNICODE (não quebra)
+      const mensagem = `\u{1F331} *NOVO PEDIDO*\n\n\u{1F464} Cliente: ${pedido.cliente}\n\u{1F4DE} Telefone: ${form.whatsapp || 'Não informado'}\n\n\u{1F6D2} *ITENS:*\n${itensTexto}\n\n\u{1F4DD} Observações: ${form.observacao || 'Nenhuma'}\n\n\u{1F4B0} *TOTAL: R$ ${pedido.valor.toFixed(2)}*`;
 
       const url = `https://wa.me/55${numeroWhatsApp}?text=${encodeURIComponent(mensagem)}`;
       window.open(url, '_blank');
