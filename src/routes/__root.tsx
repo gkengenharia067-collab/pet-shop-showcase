@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { StoreProvider } from "../lib/store";
+import { CartDrawer } from "@/components/CartDrawer";
 
 function NotFoundComponent() {
   return (
@@ -78,12 +79,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Terra Viva — Marketplace Rural" },
-      { name: "description", content: "Painel do produtor: cadastre produtos, controle estoque e acompanhe pedidos." },
-      { property: "og:title", content: "Terra Viva — Marketplace Rural" },
-      { name: "twitter:title", content: "Terra Viva — Marketplace Rural" },
-      { property: "og:description", content: "Painel do produtor: cadastre produtos, controle estoque e acompanhe pedidos." },
-      { name: "twitter:description", content: "Painel do produtor: cadastre produtos, controle estoque e acompanhe pedidos." },
+      { title: "PetMania — Loja Virtual para Pets" },
+      { name: "description", content: "Compre produtos para seu pet com facilidade e segurança." },
+      { property: "og:title", content: "PetMania — Loja Virtual para Pets" },
+      { name: "twitter:title", content: "PetMania — Loja Virtual para Pets" },
+      { property: "og:description", content: "Compre produtos para seu pet com facilidade e segurança." },
+      { name: "twitter:description", content: "Compre produtos para seu pet com facilidade e segurança." },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/7120d2aa-0373-4cc1-a7b2-fad67a75d8a5/id-preview-9a6bc107--178b2a6c-54c0-455c-a6e6-f32c6503861e.lovable.app-1781573949440.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/7120d2aa-0373-4cc1-a7b2-fad67a75d8a5/id-preview-9a6bc107--178b2a6c-54c0-455c-a6e6-f32c6503861e.lovable.app-1781573949440.png" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -126,6 +127,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <StoreProvider>
         <Outlet />
+        <CartDrawer />
       </StoreProvider>
     </QueryClientProvider>
   );
