@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Plus, ShoppingBag, Leaf, Save, CheckCircle, Upload, Link2 } from "lucide-react";
+import { Plus, ShoppingBag, PawPrint, Save, CheckCircle, Upload, Menu, X } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { useState, useEffect, useRef } from "react";
 
@@ -13,6 +13,7 @@ function formatBRL(n: number) {
 
 function DashboardPage() {
   const { produtos, pedidos } = useStore();
+  const [menuAberto, setMenuAberto] = useState(false);
 
   const [fazenda, setFazenda] = useState(() => {
     try {
@@ -91,10 +92,11 @@ function DashboardPage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="size-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-sm">
-              <Leaf className="size-5" />
+              <PawPrint className="size-5" />
             </div>
-            <div className="font-display font-bold text-xl text-foreground tracking-tight">Terra Viva</div>
+            <div className="font-display font-bold text-xl text-foreground tracking-tight">PetMania</div>
           </div>
+
           <nav className="hidden sm:flex items-center gap-6 text-sm font-medium text-muted-foreground">
             <Link to="/" className="text-primary font-semibold">Dashboard</Link>
             <Link to="/pedidos" className="hover:text-foreground cursor-pointer transition-colors">Pedidos</Link>
@@ -103,11 +105,30 @@ function DashboardPage() {
               Ver minha loja
             </Link>
           </nav>
+
+          <button
+            type="button"
+            onClick={() => setMenuAberto(!menuAberto)}
+            className="sm:hidden p-2 rounded-lg hover:bg-muted transition-colors"
+            aria-label="Abrir menu"
+          >
+            {menuAberto ? <X className="size-6" /> : <Menu className="size-6" />}
+          </button>
         </div>
+
+        {menuAberto && (
+          <div className="sm:hidden bg-card border-t border-border p-4 flex flex-col gap-3 text-sm font-medium">
+            <Link to="/" className="text-primary font-semibold" onClick={() => setMenuAberto(false)}>Dashboard</Link>
+            <Link to="/pedidos" className="hover:text-foreground transition-colors" onClick={() => setMenuAberto(false)}>Pedidos</Link>
+            <Link to="/produtos" className="hover:text-foreground transition-colors" onClick={() => setMenuAberto(false)}>Meus Produtos</Link>
+            <Link to="/catalogo" className="bg-primary text-primary-foreground px-4 py-2 rounded-full text-sm font-bold text-center hover:opacity-90 transition-all shadow-sm" onClick={() => setMenuAberto(false)}>
+              Ver minha loja
+            </Link>
+          </div>
+        )}
       </header>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-        {/* Cards de resumo */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-card rounded-2xl p-6 border border-border shadow-sm">
             <div className="flex items-center justify-between mb-2">
@@ -132,7 +153,6 @@ function DashboardPage() {
           </div>
         </div>
 
-        {/* Atalhos rápidos */}
         <div className="flex flex-wrap gap-4 mb-8">
           <Link
             to="/produtos"
@@ -150,10 +170,9 @@ function DashboardPage() {
           </Link>
         </div>
 
-        {/* Card "Minha Fazenda" com upload + URL para logo e capa */}
         <div className="bg-card p-6 rounded-2xl border border-border shadow-sm">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-display font-bold text-foreground">Minha Fazenda</h2>
+            <h2 className="text-2xl font-display font-bold text-foreground">Minha Loja</h2>
             {salvo && (
               <span className="flex items-center gap-1 text-green-600 text-sm font-medium">
                 <CheckCircle className="size-4" />
@@ -161,17 +180,17 @@ function DashboardPage() {
               </span>
             )}
           </div>
-          <p className="text-muted-foreground text-sm mb-4">Preencha os dados da sua propriedade para aparecer na loja.</p>
+          <p className="text-muted-foreground text-sm mb-4">Preencha os dados da sua loja para aparecer na vitrine.</p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-foreground mb-1.5">Nome da fazenda</label>
+              <label className="block text-sm font-medium text-foreground mb-1.5">Nome da loja</label>
               <input
                 type="text"
                 value={fazenda.nome}
                 onChange={(e) => setFazenda({ ...fazenda, nome: e.target.value })}
                 className="w-full border border-border rounded-xl bg-background px-4 py-3 outline-none focus:border-primary"
-                placeholder="Ex: Fazenda Boa Terra"
+                placeholder="Ex: PetMania"
               />
             </div>
             <div>
@@ -212,14 +231,13 @@ function DashboardPage() {
               value={fazenda.descricao}
               onChange={(e) => setFazenda({ ...fazenda, descricao: e.target.value })}
               className="w-full border border-border rounded-xl bg-background px-4 py-3 outline-none focus:border-primary resize-none h-24"
-              placeholder="Conte um pouco sobre sua fazenda..."
+              placeholder="Conte um pouco sobre sua loja..."
             />
           </div>
 
-          {/* 🔥 LOGO – URL + Upload */}
           <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-foreground mb-1.5">Logo da fazenda</label>
+              <label className="block text-sm font-medium text-foreground mb-1.5">Logo da loja</label>
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2">
                   <Link2 className="size-4 text-muted-foreground" />
@@ -258,8 +276,6 @@ function DashboardPage() {
                 )}
               </div>
             </div>
-
-            {/* 🔥 CAPA – URL + Upload */}
             <div>
               <label className="block text-sm font-medium text-foreground mb-1.5">Foto de capa</label>
               <div className="flex flex-col gap-2">
