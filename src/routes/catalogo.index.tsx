@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Leaf, MapPin, ShieldCheck, Truck, Plus, ArrowLeft, Menu, X } from "lucide-react";
+import { PawPrint, MapPin, ShieldCheck, Truck, Plus, ArrowLeft, Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 import { CartDrawer } from "@/components/CartDrawer";
@@ -13,15 +13,15 @@ function formatBRL(n: number) {
   return n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
-const FALLBACK_IMG = "https://images.unsplash.com/photo-1595859703065-cc958019e07b?w=800&q=80";
-const FALLBACK_CAPA = "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=2000&q=80";
+const FALLBACK_IMG = "https://images.unsplash.com/photo-1568572933382-74d440642117?w=800&q=80";
+const FALLBACK_CAPA = "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=2000&q=80";
 
 function getFazenda() {
   try {
     const saved = localStorage.getItem('@mr/fazenda');
     return saved ? JSON.parse(saved) : { 
-      nome: 'Terra Viva', 
-      cidade: 'Serra do Vale, MG', 
+      nome: 'PetMania', 
+      cidade: 'Campo Grande - MS', 
       descricao: '', 
       whatsapp: '',
       logo: '',
@@ -29,8 +29,8 @@ function getFazenda() {
     };
   } catch {
     return { 
-      nome: 'Terra Viva', 
-      cidade: 'Serra do Vale, MG', 
+      nome: 'PetMania', 
+      cidade: 'Campo Grande - MS', 
       descricao: '', 
       whatsapp: '',
       logo: '',
@@ -41,11 +41,13 @@ function getFazenda() {
 
 function getShortDescription(categoria: string) {
   const map: Record<string, string> = {
-    "Hortaliças": "Colhido no dia, livre de agrotóxicos.",
-    "Apicultura": "Puro, cru e processado artesanalmente.",
-    "Aves": "Galinhas criadas soltas com alimentação natural.",
+    "Cães": "Produtos de alta qualidade para cães.",
+    "Gatos": "O melhor para o seu felino.",
+    "Aves": "Acessórios e alimentação para aves.",
+    "Peixes": "Aquários, rações e acessórios.",
+    "Roedores": "Pequenos animais, grande carinho.",
   };
-  return map[categoria] || "Produto fresco direto da fazenda para sua mesa.";
+  return map[categoria] || "Produto para seu pet com qualidade e cuidado.";
 }
 
 function CatalogoPage() {
@@ -67,13 +69,12 @@ function CatalogoPage() {
               <img src={fazenda.logo} alt="Logo" className="h-9 w-auto object-contain" />
             ) : (
               <div className="size-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-sm">
-                <Leaf className="size-5" />
+                <PawPrint className="size-5" />
               </div>
             )}
             <div className="font-display font-bold text-xl text-foreground tracking-tight">{fazenda.nome}</div>
           </div>
 
-          {/* 🔥 MENU DESKTOP (aparece apenas em telas >= sm) */}
           <nav className="hidden sm:flex items-center gap-6 text-sm font-medium text-muted-foreground">
             <Link to="/" className="flex items-center gap-2 text-primary font-semibold hover:opacity-80 transition-all">
               <ArrowLeft className="size-4" />
@@ -81,11 +82,10 @@ function CatalogoPage() {
             </Link>
             <Link to="/catalogo" className="text-primary font-semibold">Início</Link>
             <a href="#produtos" className="hover:text-foreground cursor-pointer transition-colors">Produtos</a>
-            <Link to="/produtor/fazenda-boa-terra" className="hover:text-foreground cursor-pointer transition-colors">Sobre a Fazenda</Link>
+            <Link to="/produtor/fazenda-boa-terra" className="hover:text-foreground cursor-pointer transition-colors">Sobre a Loja</Link>
             <a href="#contato" className="hover:text-foreground cursor-pointer transition-colors">Contato</a>
           </nav>
 
-          {/* 🔥 BOTÃO HAMBÚRGUER (aparece apenas em telas menores que sm) */}
           <button
             type="button"
             onClick={() => setMenuAberto(!menuAberto)}
@@ -96,7 +96,6 @@ function CatalogoPage() {
           </button>
         </div>
 
-        {/* 🔥 MENU MOBILE (dropdown) */}
         {menuAberto && (
           <div className="sm:hidden bg-card border-t border-border p-4 flex flex-col gap-3 text-sm font-medium">
             <Link to="/" className="flex items-center gap-2 text-primary font-semibold" onClick={() => setMenuAberto(false)}>
@@ -105,22 +104,21 @@ function CatalogoPage() {
             </Link>
             <Link to="/catalogo" className="text-primary font-semibold" onClick={() => setMenuAberto(false)}>Início</Link>
             <a href="#produtos" className="hover:text-foreground transition-colors" onClick={() => setMenuAberto(false)}>Produtos</a>
-            <Link to="/produtor/fazenda-boa-terra" className="hover:text-foreground transition-colors" onClick={() => setMenuAberto(false)}>Sobre a Fazenda</Link>
+            <Link to="/produtor/fazenda-boa-terra" className="hover:text-foreground transition-colors" onClick={() => setMenuAberto(false)}>Sobre a Loja</Link>
             <a href="#contato" className="hover:text-foreground transition-colors" onClick={() => setMenuAberto(false)}>Contato</a>
           </div>
         )}
       </header>
 
-      {/* SACOLA STICKY NO TOPO */}
       <CartDrawer onOpenChange={setCartOpen} />
 
       <main>
-        {/* Hero Section com foto de capa personalizada */}
+        {/* Hero Section */}
         <section className="relative bg-card border-b border-border overflow-hidden">
           <div className="absolute inset-0 z-0">
             <img 
               src={fazenda.capa || FALLBACK_CAPA} 
-              alt="Capa da Fazenda" 
+              alt="Capa da loja" 
               className="w-full h-full object-cover opacity-20"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-card via-card/80 to-transparent" />
@@ -128,27 +126,27 @@ function CatalogoPage() {
           
           <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-24 text-center">
             <div className="inline-flex items-center justify-center px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-6">
-              Produtor Verificado
+              Loja Verificada
             </div>
             <h1 className="text-4xl md:text-6xl font-display font-bold text-foreground mb-6 tracking-tight">
               {fazenda.nome}
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              {fazenda.descricao || "Cultivando saúde e sabor desde 1998. Levamos até a sua mesa alimentos frescos, sustentáveis e repletos de carinho, direto de nossa propriedade na Serra do Vale."}
+              {fazenda.descricao || "Tudo para o seu pet com qualidade e preço justo. Entrega rápida e atendimento especializado."}
             </p>
             
             <div className="mt-10 flex flex-wrap items-center justify-center gap-6 sm:gap-12 text-sm text-foreground font-medium">
               <div className="flex items-center gap-2">
                 <MapPin className="size-5 text-primary" />
-                {fazenda.cidade || "Serra do Vale, MG"}
+                {fazenda.cidade || "Campo Grande - MS"}
               </div>
               <div className="flex items-center gap-2">
                 <ShieldCheck className="size-5 text-primary" />
-                Produção Própria
+                Produtos Autênticos
               </div>
               <div className="flex items-center gap-2">
                 <Truck className="size-5 text-primary" />
-                Entrega Semanal
+                Entrega Rápida
               </div>
             </div>
 
@@ -157,18 +155,17 @@ function CatalogoPage() {
                 to="/produtor/fazenda-boa-terra"
                 className="inline-flex items-center justify-center px-8 py-3.5 rounded-full bg-primary text-primary-foreground font-bold shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:scale-95 transition-all"
               >
-                Conhecer a Fazenda
+                Conhecer a Loja
               </Link>
             </div>
           </div>
         </section>
 
-        {/* Product Catalog */}
         <section id="produtos" className="max-w-6xl mx-auto px-4 sm:px-6 py-16 scroll-mt-20">
           <div className="flex items-end justify-between mb-10">
             <div>
               <h2 className="text-2xl md:text-3xl font-display font-bold text-foreground">Nossos Produtos</h2>
-              <p className="text-muted-foreground mt-2">Colhidos e preparados especialmente para você.</p>
+              <p className="text-muted-foreground mt-2">Qualidade que seu pet merece.</p>
             </div>
           </div>
 
@@ -246,12 +243,11 @@ function CatalogoPage() {
           </div>
         </section>
 
-        {/* Contact Section */}
         <section id="contato" className="bg-card border-t border-border mt-10 scroll-mt-16">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-20">
             <div className="text-center mb-12">
               <h2 className="text-2xl md:text-3xl font-display font-bold text-foreground">Entre em Contato</h2>
-              <p className="text-muted-foreground mt-2">Fale diretamente com a fazenda para dúvidas ou encomendas especiais.</p>
+              <p className="text-muted-foreground mt-2">Fale diretamente com a loja para dúvidas ou encomendas especiais.</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -269,8 +265,8 @@ function CatalogoPage() {
                   <MapPin className="size-7" />
                 </div>
                 <h3 className="font-bold text-lg text-foreground mb-1">Localização</h3>
-                <p className="text-muted-foreground">{fazenda.cidade || "Serra do Vale, MG"}</p>
-                <p className="text-sm text-muted-foreground mt-2">Estrada do Vale, Km 12</p>
+                <p className="text-muted-foreground">{fazenda.cidade || "Campo Grande - MS"}</p>
+                <p className="text-sm text-muted-foreground mt-2">Av. Principal, 123</p>
               </div>
 
               <div className="flex flex-col items-center text-center p-8 rounded-3xl bg-muted/30 border border-border">
