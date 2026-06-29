@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { MapPin, ShieldCheck, Star, CalendarDays, ThumbsUp, MessageSquare, ArrowLeft, Leaf, Truck } from "lucide-react";
+import { MapPin, ShieldCheck, Star, CalendarDays, ThumbsUp, MessageSquare, ArrowLeft, PawPrint, Truck } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 import { useEffect, useState } from "react";
@@ -12,15 +12,30 @@ function formatBRL(n: number) {
   return n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
-const FALLBACK_IMG = "https://images.unsplash.com/photo-1595859703065-cc958019e07b?w=800&q=80";
+const FALLBACK_IMG = "https://images.unsplash.com/photo-1568572933382-74d440642117?w=800&q=80";
 
-// 🔥 Função para carregar os dados da fazenda do localStorage
 function getFazenda() {
   try {
     const saved = localStorage.getItem('@mr/fazenda');
-    return saved ? JSON.parse(saved) : { nome: 'Fazenda Boa Terra', telefone: '', cidade: 'Serra do Vale, MG', descricao: '', whatsapp: '' };
+    return saved ? JSON.parse(saved) : { 
+      nome: 'PetMania', 
+      telefone: '', 
+      cidade: 'Campo Grande - MS', 
+      descricao: '', 
+      whatsapp: '',
+      logo: '',
+      capa: ''
+    };
   } catch {
-    return { nome: 'Fazenda Boa Terra', telefone: '', cidade: 'Serra do Vale, MG', descricao: '', whatsapp: '' };
+    return { 
+      nome: 'PetMania', 
+      telefone: '', 
+      cidade: 'Campo Grande - MS', 
+      descricao: '', 
+      whatsapp: '',
+      logo: '',
+      capa: ''
+    };
   }
 }
 
@@ -60,14 +75,14 @@ function ProdutorPerfilPage() {
             </Link>
             <div className="flex items-center gap-2">
               <div className="size-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center shadow-sm">
-                <Leaf className="size-4" />
+                <PawPrint className="size-4" />
               </div>
               <div className="font-display font-semibold text-lg text-foreground tracking-tight">{fazenda.nome}</div>
             </div>
           </div>
         </header>
         <div className="h-64 md:h-80 w-full overflow-hidden bg-muted">
-          <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=2000&q=80" alt="Capa da Fazenda" className="w-full h-full object-cover opacity-90" />
+          <img src={fazenda.capa || "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=2000&q=80"} alt="Capa da Loja" className="w-full h-full object-cover opacity-90" />
         </div>
         <main className="max-w-5xl mx-auto px-4 sm:px-6 mt-10">
           <div className="text-center text-muted-foreground">Carregando produtos...</div>
@@ -79,7 +94,6 @@ function ProdutorPerfilPage() {
 
   return (
     <div className="min-h-screen bg-background pb-20">
-      {/* Top Navbar */}
       <header className="bg-card border-b border-border sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link to="/catalogo" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors font-medium text-sm">
@@ -88,46 +102,43 @@ function ProdutorPerfilPage() {
           </Link>
           <div className="flex items-center gap-2">
             <div className="size-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center shadow-sm">
-              <Leaf className="size-4" />
+              <PawPrint className="size-4" />
             </div>
             <div className="font-display font-semibold text-lg text-foreground tracking-tight">{fazenda.nome}</div>
           </div>
         </div>
       </header>
 
-      {/* Capa e Perfil */}
       <div className="relative bg-card border-b border-border">
-        {/* Cover Image */}
         <div className="h-64 md:h-80 w-full overflow-hidden bg-muted">
           <img 
-            src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=2000&q=80" 
-            alt="Capa da Fazenda" 
+            src={fazenda.capa || "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=2000&q=80"} 
+            alt="Capa da Loja" 
             className="w-full h-full object-cover opacity-90"
           />
         </div>
 
-        {/* Informações do Perfil */}
         <div className="max-w-5xl mx-auto px-4 sm:px-6 relative pb-8">
           <div className="flex flex-col md:flex-row md:items-end gap-6 md:gap-8 -mt-20 md:-mt-24 relative z-10 mb-6">
             <img 
-              src="https://images.unsplash.com/photo-1589923188900-85dae523342b?w=400&h=400&fit=crop&q=80" 
-              alt="Perfil da Fazenda"
+              src={fazenda.logo || "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=400&h=400&fit=crop&q=80"} 
+              alt="Logo da Loja"
               className="size-36 md:size-48 rounded-3xl border-4 border-background shadow-xl object-cover bg-muted"
             />
             <div className="flex-1 pb-2 mt-4 md:mt-0">
               <div className="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-3">
                 <ShieldCheck className="size-4" />
-                Produtor Verificado
+                Loja Verificada
               </div>
               <h1 className="text-3xl md:text-5xl font-display font-bold text-foreground tracking-tight">
                 {fazenda.nome}
               </h1>
               <div className="flex flex-wrap items-center gap-4 text-muted-foreground mt-3 font-medium">
                 <span className="flex items-center gap-1.5">
-                  <MapPin className="size-5 text-primary" /> {fazenda.cidade || "Serra do Vale, MG"}
+                  <MapPin className="size-5 text-primary" /> {fazenda.cidade || "Campo Grande - MS"}
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <CalendarDays className="size-5" /> Na plataforma desde 2022
+                  <CalendarDays className="size-5" /> Na plataforma desde 2024
                 </span>
                 <span className="flex items-center gap-1 text-yellow-500">
                   <Star className="size-5 fill-yellow-500" />
@@ -150,9 +161,9 @@ function ProdutorPerfilPage() {
           <section className="bg-card rounded-3xl p-8 border border-border shadow-sm">
             <h2 className="text-2xl font-display font-bold text-foreground mb-4">Nossa História</h2>
             <div className="space-y-4 text-muted-foreground leading-relaxed">
-              <p>{fazenda.descricao || "A Fazenda Boa Terra começou como um sonho de família em 1998. Nossa missão sempre foi produzir alimentos saudáveis, respeitando o tempo da natureza e os ciclos do solo. Ao longo das décadas, passamos a adotar técnicas 100% orgânicas, abandonando o uso de qualquer defensivo químico."}</p>
-              <p>Hoje, somos referência na região em sustentabilidade e produção consciente. Cultivamos hortaliças fresquinhas, mantemos nossas galinhas felizes e livres, e cuidamos de nossas abelhas nativas para produzir um mel puro e artesanal.</p>
-              <p>Acreditamos que a comida de verdade deve chegar fresca à mesa das pessoas. É por isso que abrimos nossas portas virtuais aqui na Terra Viva: para conectar nossa família à sua, sem intermediários.</p>
+              <p>{fazenda.descricao || "A PetMania nasceu da paixão por animais e do desejo de oferecer produtos de qualidade para quem cuida com carinho. Nossa missão é proporcionar o melhor para os pets, com atendimento especializado e produtos selecionados."}</p>
+              <p>Estamos no mercado desde 2024, oferecendo rações, petiscos, acessórios e muito mais. Nossa equipe está sempre pronta para ajudar você a escolher o melhor para o seu companheiro.</p>
+              <p>Acreditamos que o cuidado com os pets reflete o cuidado com a vida. Por isso, trabalhamos apenas com marcas confiáveis e produtos que realmente fazem a diferença.</p>
             </div>
           </section>
 
@@ -165,7 +176,7 @@ function ProdutorPerfilPage() {
                 <div className="flex text-yellow-500 mb-3">
                   <Star className="size-4 fill-yellow-500" /><Star className="size-4 fill-yellow-500" /><Star className="size-4 fill-yellow-500" /><Star className="size-4 fill-yellow-500" /><Star className="size-4 fill-yellow-500" />
                 </div>
-                <p className="text-foreground italic mb-4">"Tomates incrivelmente saborosos! Fazia tempo que eu não comia uma salada tão gostosa. A entrega foi muito cuidadosa."</p>
+                <p className="text-foreground italic mb-4">"Ração de excelente qualidade! Meu cachorro adorou e a entrega foi super rápida. Recomendo a todos."</p>
                 <div className="text-sm text-muted-foreground font-medium flex items-center justify-between">
                   <span>Mariana Costa</span>
                   <span className="flex items-center gap-1 text-primary"><ThumbsUp className="size-3" /> Recomenda</span>
@@ -175,7 +186,7 @@ function ProdutorPerfilPage() {
                 <div className="flex text-yellow-500 mb-3">
                   <Star className="size-4 fill-yellow-500" /><Star className="size-4 fill-yellow-500" /><Star className="size-4 fill-yellow-500" /><Star className="size-4 fill-yellow-500" /><Star className="size-4 fill-yellow-500" />
                 </div>
-                <p className="text-foreground italic mb-4">"O mel artesanal é um espetáculo. Dá pra sentir que é puro. Minha família inteira amou, viramos clientes fixos da fazenda."</p>
+                <p className="text-foreground italic mb-4">"A melhor loja de pets que já comprei! Produtos de qualidade e atendimento excelente. Meus gatos amaram os petiscos."</p>
                 <div className="text-sm text-muted-foreground font-medium flex items-center justify-between">
                   <span>Carlos Almeida</span>
                   <span className="flex items-center gap-1 text-primary"><ThumbsUp className="size-3" /> Recomenda</span>
@@ -214,7 +225,7 @@ function ProdutorPerfilPage() {
             </div>
             <div className="mt-8 text-center">
               <Link to="/catalogo" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl border-2 border-border text-foreground font-bold hover:bg-muted transition-colors">
-                Explorar catálogo completo da Terra Viva
+                Explorar catálogo completo da PetMania
               </Link>
             </div>
           </section>
@@ -222,27 +233,27 @@ function ProdutorPerfilPage() {
 
         <aside className="space-y-6">
           <div className="bg-card rounded-3xl p-6 border border-border shadow-sm">
-            <h3 className="font-bold text-foreground text-lg mb-4">Informações da Propriedade</h3>
+            <h3 className="font-bold text-foreground text-lg mb-4">Informações da Loja</h3>
             <ul className="space-y-5 text-sm">
               <li className="flex items-start gap-3">
                 <Truck className="size-5 text-primary shrink-0" />
                 <div>
-                  <div className="font-semibold text-foreground">Entregas semanais</div>
-                  <div className="text-muted-foreground mt-0.5">Entregamos todas as terças e sextas na região metropolitana.</div>
+                  <div className="font-semibold text-foreground">Entregas Rápidas</div>
+                  <div className="text-muted-foreground mt-0.5">Entregamos todos os dias úteis na região metropolitana.</div>
                 </div>
               </li>
               <li className="flex items-start gap-3">
                 <ShieldCheck className="size-5 text-primary shrink-0" />
                 <div>
-                  <div className="font-semibold text-foreground">100% Orgânico</div>
-                  <div className="text-muted-foreground mt-0.5">Sem uso de pesticidas ou fertilizantes químicos na nossa terra.</div>
+                  <div className="font-semibold text-foreground">Produtos Autênticos</div>
+                  <div className="text-muted-foreground mt-0.5">Trabalhamos apenas com marcas confiáveis e originais.</div>
                 </div>
               </li>
               <li className="flex items-start gap-3">
-                <Leaf className="size-5 text-primary shrink-0" />
+                <PawPrint className="size-5 text-primary shrink-0" />
                 <div>
-                  <div className="font-semibold text-foreground">Sustentabilidade</div>
-                  <div className="text-muted-foreground mt-0.5">Usamos embalagens ecológicas e compostáveis em todos os envios para reduzir o impacto ambiental.</div>
+                  <div className="font-semibold text-foreground">Atendimento Especializado</div>
+                  <div className="text-muted-foreground mt-0.5">Nossa equipe está pronta para ajudar você a escolher o melhor para seu pet.</div>
                 </div>
               </li>
             </ul>
