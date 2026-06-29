@@ -44,15 +44,18 @@ export type CartItem = {
 };
 
 const produtosIniciais: Produto[] = [
-  { id: "p1", nome: "Tomate orgânico", preco: 8, estoque: 45, unidade: "kg", categoria: "Hortaliças", imagem: "https://images.unsplash.com/photo-1623375477547-c73c4f274922?q=80&w=1219&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-  { id: "p2", nome: "Mel artesanal", preco: 35, estoque: 12, unidade: "pote 500g", categoria: "Apicultura", imagem: "https://images.unsplash.com/photo-1587049352851-8d4e89133924?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-  { id: "p3", nome: "Ovos caipiras", preco: 22, estoque: 30, unidade: "dúzia", categoria: "Aves", imagem: "https://images.unsplash.com/photo-1477506410535-f12fe9af97cc?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+  { id: "p1", nome: "Ração Premium para Cães 10kg", preco: 45, estoque: 10, unidade: "kg", categoria: "Cães", imagem: "https://images.unsplash.com/photo-1568572933382-74d440642117?w=800&q=80" },
+  { id: "p2", nome: "Petisco Saudável para Gatos", preco: 12, estoque: 20, unidade: "pote", categoria: "Gatos", imagem: "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=800&q=80" },
+  { id: "p3", nome: "Cama Confortável para Cães", preco: 89, estoque: 5, unidade: "unidade", categoria: "Acessórios", imagem: "https://images.unsplash.com/photo-1568659135205-0f0df72d38df?w=800&q=80" },
+  { id: "p4", nome: "Coleira Antipulgas", preco: 35, estoque: 15, unidade: "unidade", categoria: "Acessórios", imagem: "https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=800&q=80" },
+  { id: "p5", nome: "Shampoo Hipoalergênico", preco: 22, estoque: 8, unidade: "unidade", categoria: "Higiene", imagem: "https://images.unsplash.com/photo-1589379812404-bc2e82b0e8c1?w=800&q=80" },
+  { id: "p6", nome: "Brinquedo Interativo para Cães", preco: 18, estoque: 12, unidade: "unidade", categoria: "Brinquedos", imagem: "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=800&q=80" },
 ];
 
 const pedidosIniciais: Pedido[] = [
-  { id: "o1", cliente: "João Silva", produto: "Tomate orgânico", quantidade: "5", valor: 40, data: "14/06", status: "Pendente" },
-  { id: "o2", cliente: "Maria Souza", produto: "Mel artesanal", quantidade: "2", valor: 70, data: "13/06", status: "Pendente" },
-  { id: "o3", cliente: "Pedro Lima", produto: "Ovos caipiras", quantidade: "3", valor: 66, data: "12/06", status: "Entregue" },
+  { id: "o1", cliente: "João Silva", produto: "Ração Premium para Cães 10kg", quantidade: "2", valor: 90, data: "14/06", status: "Pendente" },
+  { id: "o2", cliente: "Maria Souza", produto: "Shampoo Hipoalergênico", quantidade: "1", valor: 22, data: "13/06", status: "Pendente" },
+  { id: "o3", cliente: "Pedro Lima", produto: "Cama Confortável para Cães", quantidade: "1", valor: 89, data: "12/06", status: "Entregue" },
 ];
 
 type CheckoutInfo = { cliente: string; whatsapp?: string; observacao?: string };
@@ -76,9 +79,7 @@ type Ctx = {
 
 const StoreContext = createContext<Ctx | null>(null);
 
-// 🔧 Função para gerar ID único (funciona em servidor e cliente)
 function gerarId() {
-  // fallback para ambiente sem crypto
   if (typeof crypto !== 'undefined' && crypto.randomUUID) {
     return crypto.randomUUID();
   }
@@ -86,14 +87,12 @@ function gerarId() {
 }
 
 export function StoreProvider({ children }: { children: ReactNode }) {
-  // 🔥 ESTADO INICIAL: usa produtosIniciais (mesmo no servidor)
   const [produtos, setProdutos] = useState<Produto[]>(produtosIniciais);
   const [pedidos, setPedidos] = useState<Pedido[]>(pedidosIniciais);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [vendasPeriodo, setVendasPeriodo] = useState<number>(850);
   const [carregado, setCarregado] = useState(false);
 
-  // 🔥 Carrega dados do localStorage APENAS no cliente (depois da montagem)
   useEffect(() => {
     try {
       const savedProdutos = localStorage.getItem("@mr/produtos.v2");
@@ -125,7 +124,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // 🔥 Salva produtos no localStorage sempre que mudar
   useEffect(() => {
     if (carregado) {
       localStorage.setItem("@mr/produtos.v2", JSON.stringify(produtos));
@@ -150,7 +148,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }
   }, [vendasPeriodo, carregado]);
 
-  // 🔥 Sincronização entre abas
   useEffect(() => {
     const handleStorage = (e: StorageEvent) => {
       if (e.key === "@mr/pedidos" && e.newValue) {
@@ -205,7 +202,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       status: "Pendente",
     };
     setPedidos((prev) => [novoPedido, ...prev]);
-    // atualiza vendas
     const totalVendas = pedidos.filter(p => p.status === "Entregue").reduce((acc, o) => acc + o.valor, 0);
     setVendasPeriodo(totalVendas || 850);
   };
