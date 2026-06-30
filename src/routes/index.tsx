@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Plus, ShoppingBag, PawPrint, Save, CheckCircle, Upload, Menu, X } from "lucide-react";
+import { Plus, ShoppingBag, PawPrint, Save, CheckCircle, Upload, Menu, X, Link2 } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { useState, useEffect, useRef } from "react";
 
@@ -18,21 +18,21 @@ function DashboardPage() {
   const [fazenda, setFazenda] = useState(() => {
     try {
       const saved = localStorage.getItem('@mr/fazenda');
-      return saved ? JSON.parse(saved) : { 
-        nome: '', 
-        telefone: '', 
-        cidade: '', 
-        descricao: '', 
+      return saved ? JSON.parse(saved) : {
+        nome: '',
+        telefone: '',
+        cidade: '',
+        descricao: '',
         whatsapp: '',
         logo: '',
         capa: ''
       };
     } catch {
-      return { 
-        nome: '', 
-        telefone: '', 
-        cidade: '', 
-        descricao: '', 
+      return {
+        nome: '',
+        telefone: '',
+        cidade: '',
+        descricao: '',
         whatsapp: '',
         logo: '',
         capa: ''
@@ -181,7 +181,7 @@ function DashboardPage() {
             )}
           </div>
           <p className="text-muted-foreground text-sm mb-4">Preencha os dados da sua loja para aparecer na vitrine.</p>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-foreground mb-1.5">Nome da loja</label>
@@ -266,7 +266,7 @@ function DashboardPage() {
                     className="hidden"
                   />
                   {fazenda.logo && (
-                    <span className="text-sm text-green-600">✓</span>
+                    <span className="text-sm text-green-600">✔</span>
                   )}
                 </div>
                 {fazenda.logo && (
@@ -306,7 +306,7 @@ function DashboardPage() {
                     className="hidden"
                   />
                   {fazenda.capa && (
-                    <span className="text-sm text-green-600">✓</span>
+                    <span className="text-sm text-green-600">✔</span>
                   )}
                 </div>
                 {fazenda.capa && (
