@@ -13,39 +13,34 @@ function formatBRL(n: number) {
   return n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
-const FALLBACK_IMG = "https://images.unsplash.com/photo-1568572933382-74d440642117?w=1200&q=80";
+const FALLBACK_IMG =
+  "https://images.unsplash.com/photo-1568572933382-74d440642117?w=1200&q=80";
 
 function getFazenda() {
   try {
-    const saved = localStorage.getItem('@mr/fazenda');
-    return saved ? JSON.parse(saved) : {
-      nome: 'PetMania',
-      cidade: 'Campo Grande - MS',
-      descricao: '',
-      whatsapp: '',
-      logo: '',
-      capa: ''
-    };
+    const saved = localStorage.getItem("@mr/fazenda");
+    return saved
+      ? JSON.parse(saved)
+      : { nome: "PetMania", cidade: "Campo Grande - MS", descricao: "", whatsapp: "", logo: "", capa: "" };
   } catch {
-    return {
-      nome: 'PetMania',
-      cidade: 'Campo Grande - MS',
-      descricao: '',
-      whatsapp: '',
-      logo: '',
-      capa: ''
-    };
+    return { nome: "PetMania", cidade: "Campo Grande - MS", descricao: "", whatsapp: "", logo: "", capa: "" };
   }
 }
 
 function getFullDescription(nome: string, categoria: string) {
   const map: Record<string, string> = {
-    "Ração Premium para Cães 10kg": "Ração completa e balanceada para cães de todas as raças. Fórmula com proteínas de alta qualidade, vitaminas e minerais essenciais para a saúde do seu pet.",
-    "Petisco Saudável para Gatos": "Petisco natural e saboroso, perfeito para agradar seu felino. Livre de corantes e conservantes artificiais.",
-    "Cama Confortável para Cães": "Cama macia e acolchoada, ideal para o descanso do seu cão. Disponível em diversos tamanhos e cores.",
-    "Coleira Antipulgas": "Coleira eficaz contra pulgas e carrapatos, com proteção de longa duração. Segura para cães e gatos.",
-    "Shampoo Hipoalergênico": "Shampoo suave e hipoalergênico, indicado para pets com pele sensível. pH balanceado e fragrância suave.",
-    "Brinquedo Interativo para Cães": "Brinquedo divertido que estimula a mente e o instinto natural do seu cão. Perfeito para gastar energia.",
+    "Ração Premium para Cães 10kg":
+      "Ração completa e balanceada para cães de todas as raças. Fórmula com proteínas de alta qualidade, vitaminas e minerais essenciais para a saúde do seu pet.",
+    "Petisco Saudável para Gatos":
+      "Petisco natural e saboroso, perfeito para agradar seu felino. Livre de corantes e conservantes artificiais.",
+    "Cama Confortável para Cães":
+      "Cama macia e acolchoada, ideal para o descanso do seu cão. Disponível em diversos tamanhos e cores.",
+    "Coleira Antipulgas":
+      "Coleira eficaz contra pulgas e carrapatos, com proteção de longa duração. Segura para cães e gatos.",
+    "Shampoo Hipoalergênico":
+      "Shampoo suave e hipoalergênico, indicado para pets com pele sensível. pH balanceado e fragrância suave.",
+    "Brinquedo Interativo para Cães":
+      "Brinquedo divertido que estimula a mente e o instinto natural do seu cão. Perfeito para gastar energia.",
   };
   return map[nome] || `Produto de alta qualidade para o seu pet, da categoria ${categoria.toLowerCase()}. Ideal para quem cuida com carinho.`;
 }
@@ -70,54 +65,66 @@ function ProdutoDetalhesPage() {
   const [added, setAdded] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+
   useEffect(() => setMounted(true), []);
+
   const itemNoCarrinho = cart.find((c) => c.id === id);
 
   if (!produto) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center bg-card p-10 rounded-2xl shadow-sm border border-border">
-          <h1 className="text-2xl font-bold text-foreground mb-4">Produto não encontrado</h1>
-          <Link to="/catalogo" className="text-primary hover:underline font-medium">
-            &larr; Voltar ao catálogo
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-xl text-muted-foreground">Produto não encontrado.</p>
+          <Link to="/catalogo" className="text-primary hover:underline mt-2 inline-block">
+            Voltar ao catálogo
           </Link>
         </div>
       </div>
     );
   }
 
-  function handleAdd() {
-    addToCart(produto!, qtd);
+  const handleAddToCart = () => {
+    for (let i = 0; i < qtd; i++) {
+      addToCart(produto);
+    }
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
-  }
+  };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col font-sans">
+    <div className="min-h-screen bg-background">
+      {/* HEADER */}
       <header className="bg-card border-b border-border sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link
-            to="/"
-            className="hidden md:flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors font-medium text-sm"
-          >
-            <ArrowLeft className="size-4" />
-            Voltar ao painel
-          </Link>
           <div className="flex items-center gap-2.5">
             {fazenda.logo ? (
-              <img src={fazenda.logo} alt="Logo" className="h-8 w-auto object-contain" />
+              <img src={fazenda.logo} alt="Logo" className="h-9 w-9 rounded-xl object-cover" />
             ) : (
-              <div className="size-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center shadow-sm">
-                <PawPrint className="size-4" />
+              <div className="size-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-sm">
+                <PawPrint className="size-5" />
               </div>
             )}
-            <div className="font-display font-semibold text-lg text-foreground tracking-tight">{fazenda.nome}</div>
+            <div className="font-display font-bold text-xl text-foreground tracking-tight">
+              {fazenda.nome}
+            </div>
           </div>
+
+          <nav className="hidden sm:flex items-center gap-6 text-sm font-medium text-muted-foreground">
+            <button onClick={goBackToCatalogo} className="hover:text-foreground transition-colors cursor-pointer">
+              Voltar
+            </button>
+            <Link to="/catalogo" className="hover:text-foreground transition-colors">
+              Catálogo
+            </Link>
+            <Link to="/" className="hover:text-foreground transition-colors">
+              Painel
+            </Link>
+          </nav>
 
           <button
             type="button"
             onClick={() => setMenuAberto(!menuAberto)}
-            className="md:hidden p-2 rounded-lg hover:bg-muted transition-colors"
+            className="sm:hidden p-2 rounded-lg hover:bg-muted transition-colors"
             aria-label="Abrir menu"
           >
             {menuAberto ? <X className="size-6" /> : <Menu className="size-6" />}
@@ -125,161 +132,87 @@ function ProdutoDetalhesPage() {
         </div>
 
         {menuAberto && (
-          <div className="md:hidden bg-card border-t border-border p-4 flex flex-col gap-3 text-sm font-medium">
-            <Link to="/" className="flex items-center gap-2 text-primary font-semibold" onClick={() => setMenuAberto(false)}>
-              <ArrowLeft className="size-4" />
-              Voltar ao painel
+          <div className="sm:hidden bg-card border-t border-border p-4 flex flex-col gap-3 text-sm font-medium">
+            <button onClick={() => { goBackToCatalogo(); setMenuAberto(false); }} className="text-left hover:text-foreground transition-colors">
+              Voltar
+            </button>
+            <Link to="/catalogo" className="hover:text-foreground transition-colors" onClick={() => setMenuAberto(false)}>
+              Catálogo
             </Link>
-            <Link to="/catalogo" className="hover:text-foreground transition-colors" onClick={() => setMenuAberto(false)}>Catálogo</Link>
-            <Link to="/produtor/petmania" className="hover:text-foreground transition-colors" onClick={() => setMenuAberto(false)}>Sobre a Loja</Link>
+            <Link to="/" className="hover:text-foreground transition-colors" onClick={() => setMenuAberto(false)}>
+              Painel
+            </Link>
           </div>
         )}
       </header>
 
-      <CartDrawer onOpenChange={setCartOpen} />
-
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 md:py-12 relative">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
-          <Link to="/catalogo" className="hover:text-primary transition-colors">Início</Link>
-          <ChevronRight className="size-4" />
-          <span>{produto.categoria}</span>
-          <ChevronRight className="size-4" />
-          <span className="text-foreground font-medium">{produto.nome}</span>
-        </div>
-
-        <div className="bg-card rounded-[2rem] border border-border shadow-sm overflow-hidden flex flex-col lg:flex-row">
-
-          <div className="lg:w-1/2 relative min-h-[400px] lg:min-h-full bg-muted">
-            <img
-              src={produto.imagem || FALLBACK_IMG}
-              alt={produto.nome}
-              className="absolute inset-0 w-full h-full object-cover"
-            />
-            {produto.estoque === 0 && (
-              <div className="absolute inset-0 bg-background/50 flex items-center justify-center backdrop-blur-sm">
-                <span className="bg-destructive text-destructive-foreground px-6 py-2 rounded-full text-lg font-bold tracking-widest uppercase shadow-md">
-                  Esgotado
-                </span>
-              </div>
-            )}
+      {/* CONTEÚDO */}
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Imagem */}
+          <div className="lg:w-1/2">
+            <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm sticky top-24">
+              <img
+                src={produto.imagem || FALLBACK_IMG}
+                alt={produto.nome}
+                className="w-full h-auto object-cover"
+              />
+            </div>
           </div>
 
-          <div className="lg:w-1/2 p-8 md:p-12 lg:p-14 flex flex-col">
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-5 w-fit">
-              {produto.categoria}
+          {/* Detalhes */}
+          <div className="lg:w-1/2 space-y-6">
+            <div>
+              <span className="inline-block text-xs font-medium text-muted-foreground bg-muted px-3 py-1 rounded-full mb-2">
+                {produto.categoria || "Pet"}
+              </span>
+              <h1 className="text-3xl sm:text-4xl font-display font-bold text-foreground">
+                {produto.nome}
+              </h1>
             </div>
 
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-foreground mb-4 leading-tight">
-              {produto.nome}
-            </h1>
-
-            <div className="flex items-baseline gap-3 mb-6">
-              <span className="text-4xl md:text-5xl font-display font-bold text-primary">
+            <div className="flex items-center gap-4">
+              <span className="text-3xl font-display font-bold text-primary">
                 {formatBRL(produto.preco)}
               </span>
-              <span className="text-xl text-muted-foreground font-medium">/ {produto.unidade}</span>
+              {itemNoCarrinho && (
+                <span className="text-sm text-muted-foreground">
+                  ({itemNoCarrinho.quantidade} no carrinho)
+                </span>
+              )}
             </div>
 
-            <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-              {getFullDescription(produto.nome, produto.categoria)}
+            <p className="text-muted-foreground leading-relaxed">
+              {getFullDescription(produto.nome, produto.categoria || "pet")}
             </p>
 
-            <div className="grid grid-cols-2 gap-4 mb-10">
-              <div className="flex flex-col gap-1 p-4 rounded-xl bg-accent/40 border border-border">
-                <ShieldCheck className="size-6 text-primary mb-1" />
-                <span className="font-semibold text-foreground">100% Qualidade</span>
-                <span className="text-xs text-muted-foreground">Garantia da loja</span>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center border border-border rounded-xl overflow-hidden">
+                <button
+                  onClick={() => setQtd(Math.max(1, qtd - 1))}
+                  className="px-3 py-2 hover:bg-muted transition-colors"
+                >
+                  <Minus className="size-4" />
+                </button>
+                <span className="px-4 py-2 min-w-[3rem] text-center font-medium">
+                  {qtd}
+                </span>
+                <button
+                  onClick={() => setQtd(qtd + 1)}
+                  className="px-3 py-2 hover:bg-muted transition-colors"
+                >
+                  <Plus className="size-4" />
+                </button>
               </div>
-              <div className="flex flex-col gap-1 p-4 rounded-xl bg-accent/40 border border-border">
-                <Truck className="size-6 text-primary mb-1" />
-                <span className="font-semibold text-foreground">Entrega Rápida</span>
-                <span className="text-xs text-muted-foreground">Direto na sua porta</span>
-              </div>
-            </div>
-
-            <Link
-              to="/produtor/petmania"
-              className="group flex items-center justify-between mt-auto mb-8 border-t border-b border-border py-6 hover:bg-accent/40 transition-colors px-4 -mx-4 rounded-2xl cursor-pointer"
-            >
-              <div className="flex items-center gap-4">
-                <img
-                  src={fazenda.logo || "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=100&h=100&fit=crop&q=80"}
-                  alt={fazenda.nome}
-                  className="size-14 rounded-full border-2 border-border shadow-sm object-cover group-hover:scale-105 transition-transform"
-                />
-                <div>
-                  <h3 className="font-bold text-foreground text-lg group-hover:text-primary transition-colors">{fazenda.nome}</h3>
-                  <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-0.5">
-                    <MapPin className="size-4" /> {fazenda.cidade || "Campo Grande - MS"}
-                  </div>
-                </div>
-              </div>
-              <ChevronRight className="size-5 text-muted-foreground group-hover:text-primary transition-colors" />
-            </Link>
-
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                {produto.estoque > 0 ? (
-                  <span className="flex items-center gap-1.5 text-primary font-medium text-sm">
-                    <span className="relative flex h-3 w-3">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary/75 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
-                    </span>
-                    Em estoque ({produto.estoque} disponíveis)
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-1.5 text-destructive font-medium text-sm">
-                    <Info className="size-4" />
-                    Sem estoque no momento
-                  </span>
-                )}
-              </div>
-
-              {produto.estoque > 0 && (
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="text-sm font-medium text-foreground">Quantidade:</span>
-                  <div className="flex items-center border border-border rounded-xl overflow-hidden">
-                    <button
-                      type="button"
-                      onClick={() => setQtd((q) => Math.max(1, q - 1))}
-                      className="size-10 flex items-center justify-center hover:bg-muted disabled:opacity-40"
-                      disabled={qtd <= 1}
-                    >
-                      <Minus className="size-4" />
-                    </button>
-                    <span className="w-10 text-center font-semibold">{qtd}</span>
-                    <button
-                      type="button"
-                      onClick={() => setQtd((q) => Math.min(produto.estoque, q + 1))}
-                      className="size-10 flex items-center justify-center hover:bg-muted disabled:opacity-40"
-                      disabled={qtd >= produto.estoque}
-                    >
-                      <Plus className="size-4" />
-                    </button>
-                  </div>
-                  {mounted && itemNoCarrinho && (
-                    <span className="text-xs text-muted-foreground">
-                      {itemNoCarrinho.quantidade} já na sacola
-                    </span>
-                  )}
-                </div>
-              )}
 
               <button
-                disabled={produto.estoque === 0}
-                onClick={handleAdd}
-                className={`w-full flex items-center justify-center gap-3 py-4 md:py-5 rounded-2xl font-bold text-lg transition-all ${
-                  produto.estoque > 0
-                    ? added
-                      ? "bg-green-600 text-white shadow-lg"
-                      : "bg-primary text-primary-foreground shadow-lg hover:opacity-90 active:scale-[0.98]"
-                    : "bg-muted text-muted-foreground cursor-not-allowed"
-                }`}
+                onClick={handleAddToCart}
+                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-bold hover:opacity-90 transition-all shadow-sm"
               >
                 {added ? (
                   <>
                     <CheckCircle2 className="size-5" />
-                    Adicionado à sacola!
+                    Adicionado!
                   </>
                 ) : (
                   <>
@@ -289,10 +222,31 @@ function ProdutoDetalhesPage() {
                 )}
               </button>
             </div>
+
+            <div className="border-t border-border pt-6 space-y-3">
+              <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                <ShieldCheck className="size-5 text-green-600" />
+                <span>Produto original com garantia de qualidade</span>
+              </div>
+              <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                <Truck className="size-5 text-blue-600" />
+                <span>Entrega rápida e segura para todo o Brasil</span>
+              </div>
+            </div>
+
+            <Link
+              to="/catalogo"
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ArrowLeft className="size-4" />
+              Voltar ao catálogo
+            </Link>
           </div>
         </div>
       </main>
-      {!cartOpen && <FloatingWhatsApp />}
+
+      <FloatingWhatsApp />
+      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
     </div>
   );
 }
