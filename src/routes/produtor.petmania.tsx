@@ -17,21 +17,21 @@ const FALLBACK_IMG = "https://images.unsplash.com/photo-1568572933382-74d4406421
 function getFazenda() {
   try {
     const saved = localStorage.getItem('@mr/fazenda');
-    return saved ? JSON.parse(saved) : { 
-      nome: 'PetMania', 
-      telefone: '', 
-      cidade: 'Campo Grande - MS', 
-      descricao: '', 
+    return saved ? JSON.parse(saved) : {
+      nome: 'PetMania',
+      telefone: '',
+      cidade: 'Campo Grande - MS',
+      descricao: '',
       whatsapp: '',
       logo: '',
       capa: ''
     };
   } catch {
-    return { 
-      nome: 'PetMania', 
-      telefone: '', 
-      cidade: 'Campo Grande - MS', 
-      descricao: '', 
+    return {
+      nome: 'PetMania',
+      telefone: '',
+      cidade: 'Campo Grande - MS',
+      descricao: '',
       whatsapp: '',
       logo: '',
       capa: ''
@@ -111,17 +111,17 @@ function ProdutorPerfilPage() {
 
       <div className="relative bg-card border-b border-border">
         <div className="h-64 md:h-80 w-full overflow-hidden bg-muted">
-          <img 
-            src={fazenda.capa || "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=2000&q=80"} 
-            alt="Capa da Loja" 
+          <img
+            src={fazenda.capa || "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=2000&q=80"}
+            alt="Capa da Loja"
             className="w-full h-full object-cover opacity-90"
           />
         </div>
 
         <div className="max-w-5xl mx-auto px-4 sm:px-6 relative pb-8">
           <div className="flex flex-col md:flex-row md:items-end gap-6 md:gap-8 -mt-20 md:-mt-24 relative z-10 mb-6">
-            <img 
-              src={fazenda.logo || "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=400&h=400&fit=crop&q=80"} 
+            <img
+              src={fazenda.logo || "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=400&h=400&fit=crop&q=80"}
               alt="Logo da Loja"
               className="size-36 md:size-48 rounded-3xl border-4 border-background shadow-xl object-cover bg-muted"
             />
