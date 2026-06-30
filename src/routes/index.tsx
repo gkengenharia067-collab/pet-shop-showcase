@@ -15,39 +15,43 @@ function DashboardPage() {
   const { produtos, pedidos } = useStore();
   const [menuAberto, setMenuAberto] = useState(false);
 
-  const [fazenda, setFazenda] = useState(() => {
-    try {
-      const saved = localStorage.getItem('@mr/fazenda');
-      return saved ? JSON.parse(saved) : {
-        nome: '',
-        telefone: '',
-        cidade: '',
-        descricao: '',
-        whatsapp: '',
-        logo: '',
-        capa: ''
-      };
-    } catch {
-      return {
-        nome: '',
-        telefone: '',
-        cidade: '',
-        descricao: '',
-        whatsapp: '',
-        logo: '',
-        capa: ''
-      };
-    }
+  // Estado inicial vazio (será preenchido no useEffect)
+  const [fazenda, setFazenda] = useState({
+    nome: '',
+    telefone: '',
+    cidade: '',
+    descricao: '',
+    whatsapp: '',
+    logo: '',
+    capa: ''
   });
 
   const [salvo, setSalvo] = useState(false);
   const logoInputRef = useRef<HTMLInputElement>(null);
   const capaInputRef = useRef<HTMLInputElement>(null);
 
+  // Carrega os dados do localStorage APÓS a montagem (apenas no cliente)
   useEffect(() => {
-    localStorage.setItem('@mr/fazenda', JSON.stringify(fazenda));
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('@mr/fazenda');
+        if (saved) {
+          setFazenda(JSON.parse(saved));
+        }
+      } catch (error) {
+        console.error("Erro ao carregar dados da fazenda:", error);
+      }
+    }
+  }, []);
+
+  // Salva no localStorage sempre que o estado mudar (apenas no cliente)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('@mr/fazenda', JSON.stringify(fazenda));
+    }
   }, [fazenda]);
 
+  // Gerencia o indicador de "salvo"
   useEffect(() => {
     if (salvo) {
       const timer = setTimeout(() => setSalvo(false), 3000);
@@ -60,7 +64,9 @@ function DashboardPage() {
   const totalVendas = pedidos.reduce((acc, p) => acc + p.valor, 0);
 
   const handleSave = () => {
-    localStorage.setItem('@mr/fazenda', JSON.stringify(fazenda));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('@mr/fazenda', JSON.stringify(fazenda));
+    }
     setSalvo(true);
   };
 
