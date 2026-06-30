@@ -7,8 +7,8 @@ import { useStore, type Produto } from "@/lib/store";
 export const Route = createFileRoute("/produtos")({
   head: () => ({
     meta: [
-      { title: "Meus Produtos — Terra Viva" },
-      { name: "description", content: "Gerencie os produtos da sua propriedade." },
+      { title: "Meus Produtos — PetMania" },
+      { name: "description", content: "Gerencie os produtos da sua loja PetMania." },
     ],
   }),
   component: ProdutosPage,
@@ -17,6 +17,56 @@ export const Route = createFileRoute("/produtos")({
 function formatBRL(n: number) {
   return n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
+
+// ===== CATEGORIAS PARA PET SHOP =====
+const CATEGORIAS = [
+  "Ração",
+  "Brinquedos",
+  "Acessórios",
+  "Higiene",
+  "Medicamentos",
+  "Roupas",
+  "Casinhas",
+  "Petiscos",
+  "Coleiras e Guias",
+  "Transporte",
+];
+
+// ===== IMAGENS DE EXEMPLO PARA PET SHOP =====
+const galeriaImagens: { nome: string; url: string }[] = [
+  {
+    nome: "Ração Premium",
+    url: "https://images.unsplash.com/photo-1568572933382-74d440642117?w=800&q=80",
+  },
+  {
+    nome: "Brinquedo Interativo",
+    url: "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=800&q=80",
+  },
+  {
+    nome: "Cama Confortável",
+    url: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=800&q=80",
+  },
+  {
+    nome: "Coleira Antipulgas",
+    url: "https://images.unsplash.com/photo-1556742049-0a3f6ec3e33f?w=800&q=80",
+  },
+  {
+    nome: "Shampoo Hipoalergênico",
+    url: "https://images.unsplash.com/photo-1583947215251-f0b2c6e85019?w=800&q=80",
+  },
+  {
+    nome: "Petisco Natural",
+    url: "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=800&q=80",
+  },
+  {
+    nome: "Casinha Pet",
+    url: "https://images.unsplash.com/photo-1583509141647-6b5d70a7df54?w=800&q=80",
+  },
+  {
+    nome: "Roupa para Cães",
+    url: "https://images.unsplash.com/photo-1551739440-5e3e7d6ff8e3?w=800&q=80",
+  },
+];
 
 type FormState = {
   nome: string;
@@ -31,310 +81,280 @@ const emptyForm: FormState = {
   nome: "",
   preco: "",
   estoque: "",
-  unidade: "kg",
-  categoria: "Hortaliças",
+  unidade: "un",
+  categoria: CATEGORIAS[0],
   imagem: "",
 };
 
-const galeriaImagens: { nome: string; url: string }[] = [
-  { nome: "Tomate", url: "https://images.unsplash.com/photo-1623375477547-c73c4f274922?q=80&w=1219&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-  { nome: "Mel", url: "https://images.unsplash.com/photo-1587049352851-8d4e89133924?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-  { nome: "Ovos", url: "https://images.unsplash.com/photo-1477506410535-f12fe9af97cc?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-  { nome: "Alface", url: "https://images.unsplash.com/photo-1556781366-336f8353ba7c?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-  { nome: "Cenoura", url: "https://plus.unsplash.com/premium_photo-1661875719416-f2b30e95ea4a?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-  { nome: "Morango", url: "https://images.unsplash.com/photo-1716209290705-7333e99e3434?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-  { nome: "Milho", url: "https://plus.unsplash.com/premium_photo-1725619408724-d2f8eedf8128?q=80&w=1172&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-  { nome: "Leite", url: "https://images.unsplash.com/photo-1639151082235-406d8eb262b9?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-  { nome: "Frango", url: "https://images.unsplash.com/photo-1587593810167-a84920ea0781?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-  { nome: "Muda", url: "https://images.unsplash.com/photo-1649255717215-cbc24b661bbb?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-];
-
 function ProdutosPage() {
   const { produtos, addProduto, updateProduto, deleteProduto } = useStore();
-  const [open, setOpen] = useState(false);
-  const [editing, setEditing] = useState<Produto | null>(null);
+  const [modalAberto, setModalAberto] = useState(false);
+  const [editandoId, setEditandoId] = useState<string | null>(null);
   const [form, setForm] = useState<FormState>(emptyForm);
 
-  function openNew() {
-    setEditing(null);
+  function abrirModal(produto?: Produto) {
+    if (produto) {
+      setEditandoId(produto.id);
+      setForm({
+        nome: produto.nome,
+        preco: String(produto.preco),
+        estoque: String(produto.estoque || 0),
+        unidade: produto.unidade || "un",
+        categoria: produto.categoria || CATEGORIAS[0],
+        imagem: produto.imagem || "",
+      });
+    } else {
+      setEditandoId(null);
+      setForm(emptyForm);
+    }
+    setModalAberto(true);
+  }
+
+  function fecharModal() {
+    setModalAberto(false);
+    setEditandoId(null);
     setForm(emptyForm);
-    setOpen(true);
   }
-  function openEdit(p: Produto) {
-    setEditing(p);
-    setForm({
-      nome: p.nome,
-      preco: String(p.preco),
-      estoque: String(p.estoque),
-      unidade: p.unidade,
-      categoria: p.categoria,
-      imagem: p.imagem,
-    });
-    setOpen(true);
-  }
-  function save(e: React.FormEvent) {
+
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const payload = {
-      nome: form.nome.trim() || "Produto sem nome",
-      preco: Number(form.preco) || 0,
-      estoque: Number(form.estoque) || 0,
+    const preco = parseFloat(form.preco.replace(",", "."));
+    const estoque = parseInt(form.estoque) || 0;
+
+    if (!form.nome || isNaN(preco) || preco <= 0) {
+      alert("Preencha o nome e o preço corretamente.");
+      return;
+    }
+
+    const dados = {
+      nome: form.nome,
+      preco,
+      estoque,
       unidade: form.unidade,
       categoria: form.categoria,
-      imagem: form.imagem.trim(),
+      imagem: form.imagem || galeriaImagens[0].url,
     };
-    if (editing) updateProduto(editing.id, payload);
-    else addProduto(payload);
-    setOpen(false);
+
+    if (editandoId) {
+      updateProduto(editandoId, dados);
+    } else {
+      addProduto(dados);
+    }
+    fecharModal();
+  }
+
+  function handleDelete(id: string) {
+    if (confirm("Tem certeza que deseja excluir este produto?")) {
+      deleteProduto(id);
+    }
   }
 
   return (
     <AppShell>
-      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
-        <div>
-          <h1 className="text-3xl md:text-4xl font-semibold">Meus Produtos</h1>
-          <p className="text-muted-foreground mt-2">
-            {produtos.length} produto{produtos.length === 1 ? "" : "s"} cadastrado{produtos.length === 1 ? "" : "s"}
-          </p>
-        </div>
-        <button
-          onClick={openNew}
-          className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-3 rounded-xl font-semibold shadow-sm hover:bg-primary/90 transition-colors"
-        >
-          <Plus className="size-5" /> Adicionar Produto
-        </button>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        {produtos.map((p) => (
-          <article
-            key={p.id}
-            className="rounded-2xl bg-card border border-border overflow-hidden flex flex-col"
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-display font-bold text-foreground">
+            Meus Produtos
+          </h1>
+          <button
+            onClick={() => abrirModal()}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl font-bold hover:opacity-90 transition-all shadow-sm"
           >
-            <div className="h-40 bg-accent/40 flex items-center justify-center overflow-hidden">
-              {p.imagem ? (
-                <img src={p.imagem} alt={p.nome} className="w-full h-full object-cover" />
-              ) : (
-                <Camera className="size-12 text-muted-foreground" aria-hidden />
-              )}
-            </div>
-            <div className="p-5 flex-1 flex flex-col">
-              <div className="text-xs uppercase tracking-wide text-muted-foreground">
-                {p.categoria}
-              </div>
-              <h3 className="text-lg font-semibold mt-1">{p.nome}</h3>
-              <div className="mt-2 flex items-baseline gap-2">
-                <span className="text-2xl font-display font-semibold text-primary">
-                  {formatBRL(p.preco)}
-                </span>
-                <span className="text-sm text-muted-foreground">/ {p.unidade}</span>
-              </div>
-              <div className="mt-2 text-sm text-muted-foreground">
-                Estoque: <span className="font-medium text-foreground">{p.estoque} {p.unidade}</span>
-              </div>
+            <Plus className="size-5" />
+            Novo Produto
+          </button>
+        </div>
 
-              <div className="flex gap-2 mt-5 pt-4 border-t border-border">
-                <button
-                  onClick={() => openEdit(p)}
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-secondary text-secondary-foreground font-medium hover:bg-accent transition-colors"
-                >
-                  <Pencil className="size-4" /> Editar
-                </button>
-                <button
-                  onClick={() => deleteProduto(p.id)}
-                  className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-destructive/30 text-destructive font-medium hover:bg-destructive hover:text-destructive-foreground transition-colors"
-                  aria-label={`Excluir ${p.nome}`}
-                >
-                  <Trash2 className="size-4" />
-                </button>
+        {produtos.length === 0 ? (
+          <div className="text-center py-16 text-muted-foreground">
+            <p className="text-lg">Nenhum produto cadastrado ainda.</p>
+            <p className="text-sm">Clique em "Novo Produto" para começar.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {produtos.map((p) => (
+              <div
+                key={p.id}
+                className="bg-card border border-border rounded-2xl p-4 shadow-sm hover:shadow-md transition-all"
+              >
+                <img
+                  src={p.imagem || galeriaImagens[0].url}
+                  alt={p.nome}
+                  className="w-full h-40 object-cover rounded-xl mb-3"
+                />
+                <h3 className="font-bold text-foreground">{p.nome}</h3>
+                <p className="text-sm text-muted-foreground">{p.categoria}</p>
+                <p className="text-lg font-bold text-primary mt-1">
+                  {formatBRL(p.preco)}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Estoque: {p.estoque || 0} {p.unidade || "un"}
+                </p>
+                <div className="flex gap-2 mt-3">
+                  <button
+                    onClick={() => abrirModal(p)}
+                    className="flex-1 flex items-center justify-center gap-1 px-3 py-2 border border-border rounded-xl hover:bg-muted transition-all text-sm"
+                  >
+                    <Pencil className="size-4" />
+                    Editar
+                  </button>
+                  <button
+                    onClick={() => handleDelete(p.id)}
+                    className="flex-1 flex items-center justify-center gap-1 px-3 py-2 border border-red-200 text-red-600 rounded-xl hover:bg-red-50 transition-all text-sm"
+                  >
+                    <Trash2 className="size-4" />
+                    Excluir
+                  </button>
+                </div>
               </div>
-            </div>
-          </article>
-        ))}
+            ))}
+          </div>
+        )}
       </div>
 
-      {open && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-foreground/50 px-4 py-6">
-          <div className="w-full max-w-lg bg-card rounded-2xl shadow-xl border border-border max-h-[calc(100dvh-3rem)] flex flex-col">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-              <h2 className="text-xl font-semibold">
-                {editing ? "Editar produto" : "Adicionar produto"}
+      {/* MODAL */}
+      {modalAberto && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-card rounded-2xl max-w-md w-full p-6 border border-border shadow-xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-display font-bold text-foreground">
+                {editandoId ? "Editar Produto" : "Novo Produto"}
               </h2>
-              <button onClick={() => setOpen(false)} className="p-2 rounded-md hover:bg-muted" aria-label="Fechar">
+              <button
+                onClick={fecharModal}
+                className="p-2 rounded-lg hover:bg-muted transition-colors"
+              >
                 <X className="size-5" />
               </button>
             </div>
-            <form onSubmit={save} className="flex flex-col flex-1 min-h-0">
-              <div className="flex-1 overflow-y-auto p-6 space-y-4">
-                <Field label="Nome do produto">
-                  <input
-                    required
-                    value={form.nome}
-                    onChange={(e) => setForm({ ...form, nome: e.target.value })}
-                    className="input"
-                    placeholder="Ex.: Alface crespa"
-                  />
-                </Field>
-                <div className="grid grid-cols-2 gap-4">
-                  <Field label="Preço (R$)">
-                    <input
-                      required
-                      type="number"
-                      min={0}
-                      step="0.01"
-                      value={form.preco}
-                      onChange={(e) => setForm({ ...form, preco: e.target.value })}
-                      className="input"
-                      placeholder="0,00"
-                    />
-                  </Field>
-                  <Field label="Estoque">
-                    <input
-                      required
-                      type="number"
-                      min={0}
-                      value={form.estoque}
-                      onChange={(e) => setForm({ ...form, estoque: e.target.value })}
-                      className="input"
-                      placeholder="0"
-                    />
-                  </Field>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <Field label="Unidade">
-                    <select
-                      value={form.unidade}
-                      onChange={(e) => setForm({ ...form, unidade: e.target.value })}
-                      className="input"
-                    >
-                      <option>kg</option>
-                      <option>dúzia</option>
-                      <option>pote 500g</option>
-                      <option>unidade</option>
-                      <option>maço</option>
-                      <option>litro</option>
-                    </select>
-                  </Field>
-                  <Field label="Categoria">
-                    <select
-                      value={form.categoria}
-                      onChange={(e) => setForm({ ...form, categoria: e.target.value })}
-                      className="input"
-                    >
-                      <option>Hortaliças</option>
-                      <option>Frutas</option>
-                      <option>Apicultura</option>
-                      <option>Aves</option>
-                      <option>Laticínios</option>
-                      <option>Grãos</option>
-                    </select>
-                  </Field>
-                </div>
-                <Field label="Galeria de imagens">
-                  <div className="grid grid-cols-5 gap-2">
-                    {galeriaImagens.map((g) => {
-                      const selecionada = form.imagem === g.url;
-                      return (
-                        <button
-                          type="button"
-                          key={g.url}
-                          onClick={() => setForm({ ...form, imagem: g.url })}
-                          title={g.nome}
-                          className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${
-                            selecionada
-                              ? "border-primary ring-2 ring-primary/30"
-                              : "border-border hover:border-primary/60"
-                          }`}
-                        >
-                          <img src={g.url} alt={g.nome} className="w-full h-full object-cover" />
-                        </button>
-                      );
-                    })}
-                  </div>
-                </Field>
-                <Field label="Enviar imagem do dispositivo">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (!file) return;
-                      const reader = new FileReader();
-                      reader.onload = () => {
-                        if (typeof reader.result === "string") {
-                          setForm((f) => ({ ...f, imagem: reader.result as string }));
-                        }
-                      };
-                      reader.readAsDataURL(file);
-                    }}
-                    className="block w-full text-sm text-foreground file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary file:text-primary-foreground file:font-semibold hover:file:opacity-90 cursor-pointer"
-                  />
-                  <p className="text-xs text-muted-foreground mt-1.5">
-                    Ou cole uma URL no campo abaixo.
-                  </p>
-                </Field>
-                <Field label="URL da Imagem (opcional)">
-                  <input
-                    type="url"
-                    value={form.imagem.startsWith("data:") ? "" : form.imagem}
-                    onChange={(e) => setForm({ ...form, imagem: e.target.value })}
-                    className="input"
-                    placeholder="https://exemplo.com/foto.jpg"
-                  />
-                  <div className="mt-3 w-24 h-24 rounded-lg bg-accent/40 flex items-center justify-center overflow-hidden border border-border">
-                    {form.imagem ? (
-                      <img src={form.imagem} alt="Pré-visualização" className="w-full h-full object-cover" />
-                    ) : (
-                      <Camera className="size-8 text-muted-foreground" aria-hidden />
-                    )}
-                  </div>
-                </Field>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1">
+                  Nome do produto *
+                </label>
+                <input
+                  type="text"
+                  value={form.nome}
+                  onChange={(e) => setForm({ ...form, nome: e.target.value })}
+                  className="w-full border border-border rounded-xl bg-background px-4 py-3 outline-none focus:border-primary"
+                  placeholder="Ex: Ração Premium para Cães"
+                  required
+                />
               </div>
 
-              <div className="flex gap-3 p-6 pt-0 border-t border-border">
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1">
+                  Preço (R$) *
+                </label>
+                <input
+                  type="text"
+                  value={form.preco}
+                  onChange={(e) => setForm({ ...form, preco: e.target.value })}
+                  className="w-full border border-border rounded-xl bg-background px-4 py-3 outline-none focus:border-primary"
+                  placeholder="0,00"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1">
+                  Estoque
+                </label>
+                <input
+                  type="number"
+                  value={form.estoque}
+                  onChange={(e) => setForm({ ...form, estoque: e.target.value })}
+                  className="w-full border border-border rounded-xl bg-background px-4 py-3 outline-none focus:border-primary"
+                  placeholder="0"
+                  min="0"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1">
+                  Unidade
+                </label>
+                <input
+                  type="text"
+                  value={form.unidade}
+                  onChange={(e) => setForm({ ...form, unidade: e.target.value })}
+                  className="w-full border border-border rounded-xl bg-background px-4 py-3 outline-none focus:border-primary"
+                  placeholder="kg, un, g, etc."
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1">
+                  Categoria
+                </label>
+                <select
+                  value={form.categoria}
+                  onChange={(e) => setForm({ ...form, categoria: e.target.value })}
+                  className="w-full border border-border rounded-xl bg-background px-4 py-3 outline-none focus:border-primary"
+                >
+                  {CATEGORIAS.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1">
+                  URL da imagem
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={form.imagem}
+                    onChange={(e) => setForm({ ...form, imagem: e.target.value })}
+                    className="flex-1 border border-border rounded-xl bg-background px-4 py-3 outline-none focus:border-primary"
+                    placeholder="https://... ou deixe vazio para usar uma de exemplo"
+                  />
+                </div>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {galeriaImagens.slice(0, 6).map((img) => (
+                    <button
+                      key={img.url}
+                      type="button"
+                      onClick={() => setForm({ ...form, imagem: img.url })}
+                      className={`w-12 h-12 rounded-lg overflow-hidden border-2 transition-all ${
+                        form.imagem === img.url
+                          ? "border-primary"
+                          : "border-border hover:border-muted-foreground"
+                      }`}
+                    >
+                      <img
+                        src={img.url}
+                        alt={img.nome}
+                        className="w-full h-full object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex gap-3 pt-2">
                 <button
                   type="button"
-                  onClick={() => setOpen(false)}
-                  className="flex-1 px-4 py-3 rounded-xl border border-border font-medium hover:bg-muted"
+                  onClick={fecharModal}
+                  className="flex-1 px-4 py-3 border border-border rounded-xl hover:bg-muted transition-all font-medium"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-3 rounded-xl bg-primary text-primary-foreground font-semibold hover:bg-primary/90"
+                  className="flex-1 px-4 py-3 bg-primary text-primary-foreground rounded-xl font-bold hover:opacity-90 transition-all shadow-sm"
                 >
-                  {editing ? "Salvar alterações" : "Adicionar produto"}
+                  {editandoId ? "Salvar" : "Adicionar"}
                 </button>
               </div>
             </form>
           </div>
         </div>
       )}
-
-      <style>{`
-        .input {
-          width: 100%;
-          padding: 0.7rem 0.9rem;
-          border-radius: 0.7rem;
-          border: 1px solid var(--color-border);
-          background: var(--color-background);
-          color: var(--color-foreground);
-          font-size: 1rem;
-          outline: none;
-        }
-        .input:focus {
-          border-color: var(--color-primary);
-          box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-primary) 20%, transparent);
-        }
-      `}</style>
     </AppShell>
-  );
-}
-
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <label className="block">
-      <span className="text-sm font-medium text-foreground">{label}</span>
-      <div className="mt-1.5">{children}</div>
-    </label>
   );
 }
