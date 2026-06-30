@@ -13,7 +13,7 @@ import { Route as ProdutosRouteImport } from './routes/produtos'
 import { Route as PedidosRouteImport } from './routes/pedidos'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CatalogoIndexRouteImport } from './routes/catalogo.index'
-import { Route as ProdutorFazendaBoaTerraRouteImport } from './routes/produtor.fazenda-boa-terra'
+import { Route as ProdutorPetmaniaRouteImport } from './routes/produtor.petmania'
 import { Route as CatalogoIdRouteImport } from './routes/catalogo.$id'
 
 const ProdutosRoute = ProdutosRouteImport.update({
@@ -36,9 +36,9 @@ const CatalogoIndexRoute = CatalogoIndexRouteImport.update({
   path: '/catalogo/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProdutorFazendaBoaTerraRoute = ProdutorFazendaBoaTerraRouteImport.update({
-  id: '/produtor/fazenda-boa-terra',
-  path: '/produtor/fazenda-boa-terra',
+const ProdutorPetmaniaRoute = ProdutorPetmaniaRouteImport.update({
+  id: '/produtor/petmania',
+  path: '/produtor/petmania',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CatalogoIdRoute = CatalogoIdRouteImport.update({
@@ -52,7 +52,7 @@ export interface FileRoutesByFullPath {
   '/pedidos': typeof PedidosRoute
   '/produtos': typeof ProdutosRoute
   '/catalogo/$id': typeof CatalogoIdRoute
-  '/produtor/fazenda-boa-terra': typeof ProdutorFazendaBoaTerraRoute
+  '/produtor/petmania': typeof ProdutorPetmaniaRoute
   '/catalogo/': typeof CatalogoIndexRoute
 }
 export interface FileRoutesByTo {
@@ -60,7 +60,7 @@ export interface FileRoutesByTo {
   '/pedidos': typeof PedidosRoute
   '/produtos': typeof ProdutosRoute
   '/catalogo/$id': typeof CatalogoIdRoute
-  '/produtor/fazenda-boa-terra': typeof ProdutorFazendaBoaTerraRoute
+  '/produtor/petmania': typeof ProdutorPetmaniaRoute
   '/catalogo': typeof CatalogoIndexRoute
 }
 export interface FileRoutesById {
@@ -69,7 +69,7 @@ export interface FileRoutesById {
   '/pedidos': typeof PedidosRoute
   '/produtos': typeof ProdutosRoute
   '/catalogo/$id': typeof CatalogoIdRoute
-  '/produtor/fazenda-boa-terra': typeof ProdutorFazendaBoaTerraRoute
+  '/produtor/petmania': typeof ProdutorPetmaniaRoute
   '/catalogo/': typeof CatalogoIndexRoute
 }
 export interface FileRouteTypes {
@@ -79,7 +79,7 @@ export interface FileRouteTypes {
     | '/pedidos'
     | '/produtos'
     | '/catalogo/$id'
-    | '/produtor/fazenda-boa-terra'
+    | '/produtor/petmania'
     | '/catalogo/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -87,7 +87,7 @@ export interface FileRouteTypes {
     | '/pedidos'
     | '/produtos'
     | '/catalogo/$id'
-    | '/produtor/fazenda-boa-terra'
+    | '/produtor/petmania'
     | '/catalogo'
   id:
     | '__root__'
@@ -95,7 +95,7 @@ export interface FileRouteTypes {
     | '/pedidos'
     | '/produtos'
     | '/catalogo/$id'
-    | '/produtor/fazenda-boa-terra'
+    | '/produtor/petmania'
     | '/catalogo/'
   fileRoutesById: FileRoutesById
 }
@@ -104,7 +104,7 @@ export interface RootRouteChildren {
   PedidosRoute: typeof PedidosRoute
   ProdutosRoute: typeof ProdutosRoute
   CatalogoIdRoute: typeof CatalogoIdRoute
-  ProdutorFazendaBoaTerraRoute: typeof ProdutorFazendaBoaTerraRoute
+  ProdutorPetmaniaRoute: typeof ProdutorPetmaniaRoute
   CatalogoIndexRoute: typeof CatalogoIndexRoute
 }
 
@@ -138,11 +138,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CatalogoIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/produtor/fazenda-boa-terra': {
-      id: '/produtor/fazenda-boa-terra'
-      path: '/produtor/fazenda-boa-terra'
-      fullPath: '/produtor/fazenda-boa-terra'
-      preLoaderRoute: typeof ProdutorFazendaBoaTerraRouteImport
+    '/produtor/petmania': {
+      id: '/produtor/petmania'
+      path: '/produtor/petmania'
+      fullPath: '/produtor/petmania'
+      preLoaderRoute: typeof ProdutorPetmaniaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/catalogo/$id': {
@@ -160,7 +160,7 @@ const rootRouteChildren: RootRouteChildren = {
   PedidosRoute: PedidosRoute,
   ProdutosRoute: ProdutosRoute,
   CatalogoIdRoute: CatalogoIdRoute,
-  ProdutorFazendaBoaTerraRoute: ProdutorFazendaBoaTerraRoute,
+  ProdutorPetmaniaRoute: ProdutorPetmaniaRoute,
   CatalogoIndexRoute: CatalogoIndexRoute,
 }
 export const routeTree = rootRouteImport
