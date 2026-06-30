@@ -18,19 +18,19 @@ const FALLBACK_IMG = "https://images.unsplash.com/photo-1568572933382-74d4406421
 function getFazenda() {
   try {
     const saved = localStorage.getItem('@mr/fazenda');
-    return saved ? JSON.parse(saved) : { 
-      nome: 'PetMania', 
-      cidade: 'Campo Grande - MS', 
-      descricao: '', 
+    return saved ? JSON.parse(saved) : {
+      nome: 'PetMania',
+      cidade: 'Campo Grande - MS',
+      descricao: '',
       whatsapp: '',
       logo: '',
       capa: ''
     };
   } catch {
-    return { 
-      nome: 'PetMania', 
-      cidade: 'Campo Grande - MS', 
-      descricao: '', 
+    return {
+      nome: 'PetMania',
+      cidade: 'Campo Grande - MS',
+      descricao: '',
       whatsapp: '',
       logo: '',
       capa: ''
@@ -94,7 +94,6 @@ function ProdutoDetalhesPage() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans">
-      {/* Top Navbar */}
       <header className="bg-card border-b border-border sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link
@@ -132,7 +131,7 @@ function ProdutoDetalhesPage() {
               Voltar ao painel
             </Link>
             <Link to="/catalogo" className="hover:text-foreground transition-colors" onClick={() => setMenuAberto(false)}>Catálogo</Link>
-            <Link to="/produtor/fazenda-boa-terra" className="hover:text-foreground transition-colors" onClick={() => setMenuAberto(false)}>Sobre a Loja</Link>
+            <Link to="/produtor/petmania" className="hover:text-foreground transition-colors" onClick={() => setMenuAberto(false)}>Sobre a Loja</Link>
           </div>
         )}
       </header>
@@ -140,7 +139,6 @@ function ProdutoDetalhesPage() {
       <CartDrawer onOpenChange={setCartOpen} />
 
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 md:py-12 relative">
-        {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
           <Link to="/catalogo" className="hover:text-primary transition-colors">Início</Link>
           <ChevronRight className="size-4" />
@@ -150,11 +148,10 @@ function ProdutoDetalhesPage() {
         </div>
 
         <div className="bg-card rounded-[2rem] border border-border shadow-sm overflow-hidden flex flex-col lg:flex-row">
-          
-          {/* Product Image */}
+
           <div className="lg:w-1/2 relative min-h-[400px] lg:min-h-full bg-muted">
-            <img 
-              src={produto.imagem || FALLBACK_IMG} 
+            <img
+              src={produto.imagem || FALLBACK_IMG}
               alt={produto.nome}
               className="absolute inset-0 w-full h-full object-cover"
             />
@@ -167,16 +164,15 @@ function ProdutoDetalhesPage() {
             )}
           </div>
 
-          {/* Product Details */}
           <div className="lg:w-1/2 p-8 md:p-12 lg:p-14 flex flex-col">
             <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-5 w-fit">
               {produto.categoria}
             </div>
-            
+
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-foreground mb-4 leading-tight">
               {produto.nome}
             </h1>
-            
+
             <div className="flex items-baseline gap-3 mb-6">
               <span className="text-4xl md:text-5xl font-display font-bold text-primary">
                 {formatBRL(produto.preco)}
@@ -188,7 +184,6 @@ function ProdutoDetalhesPage() {
               {getFullDescription(produto.nome, produto.categoria)}
             </p>
 
-            {/* Trust Signals */}
             <div className="grid grid-cols-2 gap-4 mb-10">
               <div className="flex flex-col gap-1 p-4 rounded-xl bg-accent/40 border border-border">
                 <ShieldCheck className="size-6 text-primary mb-1" />
@@ -202,14 +197,13 @@ function ProdutoDetalhesPage() {
               </div>
             </div>
 
-            {/* Store Info */}
-            <Link 
-              to="/produtor/fazenda-boa-terra"
+            <Link
+              to="/produtor/petmania"
               className="group flex items-center justify-between mt-auto mb-8 border-t border-b border-border py-6 hover:bg-accent/40 transition-colors px-4 -mx-4 rounded-2xl cursor-pointer"
             >
               <div className="flex items-center gap-4">
-                <img 
-                  src={fazenda.logo || "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=100&h=100&fit=crop&q=80"} 
+                <img
+                  src={fazenda.logo || "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=100&h=100&fit=crop&q=80"}
                   alt={fazenda.nome}
                   className="size-14 rounded-full border-2 border-border shadow-sm object-cover group-hover:scale-105 transition-transform"
                 />
@@ -223,7 +217,6 @@ function ProdutoDetalhesPage() {
               <ChevronRight className="size-5 text-muted-foreground group-hover:text-primary transition-colors" />
             </Link>
 
-            {/* CTA */}
             <div>
               <div className="flex items-center gap-2 mb-4">
                 {produto.estoque > 0 ? (
@@ -241,7 +234,7 @@ function ProdutoDetalhesPage() {
                   </span>
                 )}
               </div>
-              
+
               {produto.estoque > 0 && (
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-sm font-medium text-foreground">Quantidade:</span>
